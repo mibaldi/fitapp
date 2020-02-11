@@ -4,6 +4,7 @@ import android.app.Application
 import com.mibaldi.data.repository.TrainingsRepository
 import com.mibaldi.data.source.RemoteDataSource
 import com.mibaldi.fitapp.appData.server.FitAppDbDataSource
+import com.mibaldi.fitapp.appData.servermock.FitAppDbDataSourceMock
 import com.mibaldi.fitapp.ui.main.MainActivity
 import com.mibaldi.fitapp.ui.main.MainViewModel
 import com.mibaldi.usecases.GetTrainings
@@ -27,7 +28,8 @@ fun Application.initDI(){
 
 private val appModule = module {
     single(named("apiKey")) { androidApplication().getString(R.string.api_key) }
-    factory<RemoteDataSource> { FitAppDbDataSource(get()) }
+    //factory<RemoteDataSource> { FitAppDbDataSource(get()) }
+    factory<RemoteDataSource> { FitAppDbDataSourceMock() }
     single<CoroutineDispatcher> { Dispatchers.Main }
     single(named("baseUrl")) { "https://api.themoviedb.org/3/" }
 }

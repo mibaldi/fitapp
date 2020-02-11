@@ -7,6 +7,7 @@ import com.mibaldi.domain.Training
 import com.mibaldi.fitapp.R
 import com.mibaldi.fitapp.ui.common.basicDiffUtil
 import com.mibaldi.fitapp.ui.common.inflate
+import kotlinx.android.synthetic.main.view_training.view.*
 
 class TrainingsAdapter(private val listener: (Training) -> Unit): RecyclerView.Adapter<TrainingsAdapter.ViewHolder>() {
 
@@ -31,6 +32,7 @@ class TrainingsAdapter(private val listener: (Training) -> Unit): RecyclerView.A
     }
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(training: Training){
+            itemView.trainingTitle.text = training.name
         }
     }
 }
