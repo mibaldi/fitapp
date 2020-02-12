@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Fitapp</string>
+    <string name="api_key">My api key</string>
+    <string name="trainingdetailimage">trainingDetailImage</string>
 </resources>
