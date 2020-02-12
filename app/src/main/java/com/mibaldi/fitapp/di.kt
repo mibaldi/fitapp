@@ -1,12 +1,21 @@
 package com.mibaldi.fitapp
 
 import android.app.Application
+import com.mibaldi.data.repository.PermissionChecker
+import com.mibaldi.data.repository.RegionRepository
 import com.mibaldi.data.repository.TrainingsRepository
+import com.mibaldi.data.source.LocationDataSource
 import com.mibaldi.data.source.RemoteDataSource
+import com.mibaldi.fitapp.appData.AndroidPermissionChecker
+import com.mibaldi.fitapp.appData.PlayServicesLocationDataSource
+import com.mibaldi.fitapp.appData.server.FitAppDb
 import com.mibaldi.fitapp.appData.server.FitAppDbDataSource
 import com.mibaldi.fitapp.appData.servermock.FitAppDbDataSourceMock
+import com.mibaldi.fitapp.ui.detail.DetailActivity
+import com.mibaldi.fitapp.ui.detail.DetailViewModel
 import com.mibaldi.fitapp.ui.main.MainActivity
 import com.mibaldi.fitapp.ui.main.MainViewModel
+import com.mibaldi.usecases.FindTrainingById
 import com.mibaldi.usecases.GetTrainings
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -30,12 +39,16 @@ private val appModule = module {
     single(named("apiKey")) { androidApplication().getString(R.string.api_key) }
     //factory<RemoteDataSource> { FitAppDbDataSource(get()) }
     factory<RemoteDataSource> { FitAppDbDataSourceMock() }
+    factory<LocationDataSource>{PlayServicesLocationDataSource(get()) }
+    factory<PermissionChecker> {AndroidPermissionChecker(get())}
     single<CoroutineDispatcher> { Dispatchers.Main }
     single(named("baseUrl")) { "https://api.themoviedb.org/3/" }
+    single {FitAppDb(get(named("baseUrl")))}
 }
 
 val dataModule = module {
-    factory { TrainingsRepository(get()) }
+    factory { RegionRepository(get(),get()) }
+    factory { TrainingsRepository(get(),get()) }
 }
 
 private val scopesModule = module {
@@ -43,4 +56,10 @@ private val scopesModule = module {
         viewModel { MainViewModel(get(), get()) }
         scoped { GetTrainings(get()) }
     }
+
+    scope(named<DetailActivity>()) {
+        viewModel { (id: Int) -> DetailViewModel(id, get(),get()) }
+        scoped { FindTrainingById(get()) }
+    }
 }
+

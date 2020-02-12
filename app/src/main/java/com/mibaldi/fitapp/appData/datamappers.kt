@@ -8,3 +8,5 @@ fun ServerTraining.toDomainTraining(): Training =
         0,
         title
     )
+
+

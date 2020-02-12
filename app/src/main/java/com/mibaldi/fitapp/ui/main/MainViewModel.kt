@@ -24,10 +24,14 @@ class MainViewModel (private val getTrainings: GetTrainings,
     sealed class UiModel {
         object Loading : UiModel()
         data class Content(val trainings: List<Training>): UiModel()
-        data class Navigation(val training: Training): UiModel()
+        object RequestLocationPermission : UiModel()
+
     }
 
     private fun refresh() {
+        _model.value = UiModel.RequestLocationPermission
+    }
+    fun onCoarsePermissionRequested() {
         launch {
             _model.value = UiModel.Loading
             _model.value = UiModel.Content(getTrainings.invoke())
