@@ -11,6 +11,8 @@ import com.mibaldi.fitapp.appData.PlayServicesLocationDataSource
 import com.mibaldi.fitapp.appData.server.FitAppDb
 import com.mibaldi.fitapp.appData.server.FitAppDbDataSource
 import com.mibaldi.fitapp.appData.servermock.FitAppDbDataSourceMock
+import com.mibaldi.fitapp.ui.base.BaseActivity
+import com.mibaldi.fitapp.ui.base.BaseViewModel
 import com.mibaldi.fitapp.ui.detail.DetailActivity
 import com.mibaldi.fitapp.ui.detail.DetailViewModel
 import com.mibaldi.fitapp.ui.main.MainActivity
@@ -52,6 +54,11 @@ val dataModule = module {
 }
 
 private val scopesModule = module {
+    scope(named<BaseActivity>()) {
+        viewModel { BaseViewModel(get(),get()) }
+        scoped { FindTrainingById(get()) }
+    }
+
     scope(named<MainActivity>()) {
         viewModel { MainViewModel(get(), get()) }
         scoped { GetTrainings(get()) }

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "950542443533",
+    "firebase_url": "https://fitapp-9fccb.firebaseio.com",
+    "project_id": "fitapp-9fccb",
+    "storage_bucket": "fitapp-9fccb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:950542443533:android:e795fd4cbda0e428ef2144",
+        "android_client_info": {
+          "package_name": "com.mibaldi.fitapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "950542443533-ivhfqp2j4hkjahmvgs4h7hm95tmlnkm2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mibaldi.fitapp",
+            "certificate_hash": "93b66913c4a692cf0f162d4cba74548380534e31"
+          }
+        },
+        {
+          "client_id": "950542443533-rjkbea446oa849csu2b42400ank1u9co.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBZHWIXKkPkCMi2-eC5x4i8iJnmo8UTpY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "950542443533-rjkbea446oa849csu2b42400ank1u9co.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

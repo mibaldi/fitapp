@@ -1,12 +1,16 @@
 package com.mibaldi.fitapp.ui.main
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.mibaldi.fitapp.R
 import com.mibaldi.fitapp.ui.adapter.TrainingsAdapter
+import com.mibaldi.fitapp.ui.base.BaseActivity
 import com.mibaldi.fitapp.ui.common.PermissionRequester
 import com.mibaldi.fitapp.ui.common.startActivity
 import com.mibaldi.fitapp.ui.detail.DetailActivity
@@ -15,7 +19,7 @@ import com.mibaldi.fitapp.ui.main.MainViewModel.UiModel
 import org.koin.android.scope.currentScope
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
     private lateinit var adapter: TrainingsAdapter
     private val viewModel: MainViewModel by currentScope.viewModel(this)
     private val coarsePermissionRequester =
@@ -33,6 +37,13 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+
+
+    }
+
+    override fun onNotificationReceived(intent: Intent) {
+        super.onNotificationReceived(intent)
+        Toast.makeText(this,"Mikel",Toast.LENGTH_SHORT).show()
     }
 
     private fun updateUi(model: UiModel) {
