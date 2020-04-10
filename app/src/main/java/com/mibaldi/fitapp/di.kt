@@ -11,6 +11,12 @@ import com.mibaldi.fitapp.appData.PlayServicesLocationDataSource
 import com.mibaldi.fitapp.appData.server.FitAppDb
 import com.mibaldi.fitapp.appData.server.FitAppDbDataSource
 import com.mibaldi.fitapp.appData.servermock.FitAppDbDataSourceMock
+import com.mibaldi.fitapp.services.Analytics
+import com.mibaldi.fitapp.services.AnalyticsCallbacks
+import com.mibaldi.fitapp.services.FirebaseAnalytics
+import com.mibaldi.fitapp.ui.base.BaseActivity
+import com.mibaldi.fitapp.ui.base.BaseViewModel
+import com.mibaldi.fitapp.ui.common.DialogManager
 import com.mibaldi.fitapp.ui.detail.DetailActivity
 import com.mibaldi.fitapp.ui.detail.DetailViewModel
 import com.mibaldi.fitapp.ui.main.MainActivity
@@ -37,6 +43,9 @@ fun Application.initDI(){
 
 private val appModule = module {
     single(named("apiKey")) { androidApplication().getString(R.string.api_key) }
+    single<Analytics> { FirebaseAnalytics() }
+    single {  AnalyticsCallbacks(get()) }
+    single {  DialogManager() }
     //factory<RemoteDataSource> { FitAppDbDataSource(get()) }
     factory<RemoteDataSource> { FitAppDbDataSourceMock() }
     factory<LocationDataSource>{PlayServicesLocationDataSource(get()) }
@@ -44,6 +53,8 @@ private val appModule = module {
     single<CoroutineDispatcher> { Dispatchers.Main }
     single(named("baseUrl")) { "https://api.themoviedb.org/3/" }
     single {FitAppDb(get(named("baseUrl")))}
+    factory { FindTrainingById(get()) }
+    viewModel { BaseViewModel(get(),get()) }
 }
 
 val dataModule = module {

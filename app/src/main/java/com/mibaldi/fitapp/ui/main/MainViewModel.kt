@@ -1,16 +1,26 @@
 package com.mibaldi.fitapp.ui.main
 
+import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mibaldi.domain.Training
+import com.mibaldi.fitapp.services.AnalyticsCallbacks
+import com.mibaldi.fitapp.ui.common.DialogManager
 import com.mibaldi.fitapp.ui.common.Event
 import com.mibaldi.fitapp.ui.common.ScopedViewModel
 import com.mibaldi.usecases.GetTrainings
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 class MainViewModel (private val getTrainings: GetTrainings,
                      uiDispatcher: CoroutineDispatcher): ScopedViewModel(uiDispatcher){
+
+    private val analyticsCallbacks by inject<AnalyticsCallbacks>()
+    private val dialogManager by inject<DialogManager>()
 
     private val _model = MutableLiveData<UiModel>()
     val model : LiveData<UiModel>
@@ -29,6 +39,7 @@ class MainViewModel (private val getTrainings: GetTrainings,
     }
 
     private fun refresh() {
+        analyticsCallbacks.logEvent("training clicked")
         _model.value = UiModel.RequestLocationPermission
     }
     fun onCoarsePermissionRequested() {
@@ -39,6 +50,11 @@ class MainViewModel (private val getTrainings: GetTrainings,
     }
 
     fun onTrainingClicked(training: Training){
+       /* dialogManager.showDialog({
+            Log.d("POSITIVE",training.name)
+        },{
+            Log.d("NEGATIVE",training.name)
+        })*/
         _navigation.value = Event(training)
     }
 }
