@@ -38,10 +38,10 @@ class UiTest : KoinTest {
 
     @Before
     fun setUp() {
+
         mockWebServerRule.server.enqueue(
             MockResponse().fromJson(
-                ApplicationProvider.getApplicationContext(),
-                "popularmovies.json"
+                "trainings.json"
             )
         )
 
@@ -50,7 +50,7 @@ class UiTest : KoinTest {
     }
 
     @Test
-    fun clickAMovieNavigatesToDetail() {
+    fun clickATrainingNavigatesToDetail() {
         activityTestRule.launchActivity(null)
 
         onView(withId(R.id.recycler)).perform(

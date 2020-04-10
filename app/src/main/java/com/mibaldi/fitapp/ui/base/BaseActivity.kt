@@ -18,7 +18,6 @@ abstract class BaseActivity :AppCompatActivity(),NotificationDelegate by Notific
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onCreate(savedInstanceState, persistentState)
         viewModel.model.observe(this, Observer(::updateUi))
-
     }
 
     private fun updateUi(model: BaseViewModel.UiModel) {

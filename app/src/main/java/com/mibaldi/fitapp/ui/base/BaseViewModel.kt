@@ -1,5 +1,6 @@
 package com.mibaldi.fitapp.ui.base
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mibaldi.fitapp.ui.common.ScopedViewModel
@@ -7,7 +8,10 @@ import com.mibaldi.usecases.FindTrainingById
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 
-class BaseViewModel (private val findTrainingById: FindTrainingById,uiDispatcher: CoroutineDispatcher): ScopedViewModel(uiDispatcher) {
+class BaseViewModel (
+    private val findTrainingById: FindTrainingById,
+    uiDispatcher: CoroutineDispatcher
+): ScopedViewModel(uiDispatcher) {
 
     private val _model = MutableLiveData<UiModel>()
     val model : LiveData<UiModel>
@@ -22,7 +26,11 @@ class BaseViewModel (private val findTrainingById: FindTrainingById,uiDispatcher
     fun checkIsSuspended(){
         launch {
             _model.value = UiModel.Loading
-            findTrainingById(1)
+            findTrainingById(1).foldT({
+
+            },{
+                Log.d("MIKEL","prueba is suspended")
+            })
         }
     }
 }

@@ -3,10 +3,13 @@ package com.mibaldi.fitapp.services
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.getIntent
 import android.content.IntentFilter
+import android.os.Bundle
 import android.util.Log
 import com.mibaldi.fitapp.services.NotificationDelegate.Companion.ACTION_NOTIFICATION
 import com.mibaldi.fitapp.ui.base.BaseActivity
+
 
 class NotificationDelegateImpl : NotificationDelegate {
     private var fcmNotificationReceiver: BroadcastReceiver = object : BroadcastReceiver() {
@@ -30,6 +33,12 @@ class NotificationDelegateImpl : NotificationDelegate {
 
     override fun onReceiveFCM(intent:Intent,context: Context){
         if (!intent.getStringExtra("Usuario").isNullOrEmpty()){
+            intent.apply {
+                replaceExtras(Bundle())
+                action = ""
+                data = null
+                flags = 0
+            }
             fcmNotificationReceiver.onReceive(context,Intent())
         }
     }
