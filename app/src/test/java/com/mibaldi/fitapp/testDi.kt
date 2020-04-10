@@ -4,8 +4,7 @@ import com.mibaldi.data.repository.PermissionChecker
 import com.mibaldi.data.source.LocationDataSource
 import com.mibaldi.data.source.RemoteDataSource
 import com.mibaldi.domain.Either
-import com.mibaldi.domain.FitAppError
-import com.mibaldi.domain.Training
+import com.mibaldi.fitapp.app.dataModule
 import com.mibaldi.testshared.mockedTraining
 import kotlinx.coroutines.Dispatchers
 import org.koin.core.context.startKoin

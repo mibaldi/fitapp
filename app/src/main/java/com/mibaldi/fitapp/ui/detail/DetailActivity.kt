@@ -7,15 +7,15 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.mibaldi.fitapp.R
 import kotlinx.android.synthetic.main.activity_detail.*
-import org.koin.android.scope.currentScope
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.scope.lifecycleScope
+import org.koin.androidx.viewmodel.scope.viewModel
 import org.koin.core.parameter.parametersOf
 
 class DetailActivity : AppCompatActivity() {
     companion object {
         const val TRAINING = "DetailActivity:training"
     }
-    private val viewModel: DetailViewModel by currentScope.viewModel(this) {
+    private val viewModel: DetailViewModel by lifecycleScope.viewModel(this) {
         parametersOf(intent.getIntExtra(TRAINING,-1))
     }
     @SuppressLint("SetTextI18n")

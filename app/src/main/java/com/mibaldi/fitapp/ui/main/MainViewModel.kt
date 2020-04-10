@@ -1,7 +1,5 @@
 package com.mibaldi.fitapp.ui.main
 
-import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mibaldi.domain.Training
@@ -12,8 +10,6 @@ import com.mibaldi.fitapp.ui.common.ScopedViewModel
 import com.mibaldi.usecases.GetTrainings
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
-import org.koin.core.KoinComponent
 import org.koin.core.inject
 
 class MainViewModel (private val getTrainings: GetTrainings,

@@ -1,8 +1,8 @@
-package com.mibaldi.fitapp
+package com.mibaldi.fitapp.app
 
 import android.app.Application
+import com.mibaldi.fitapp.app.initDI
 import com.mibaldi.fitapp.services.AnalyticsCallbacks
-import com.mibaldi.fitapp.services.FirebaseAnalytics
 import com.mibaldi.fitapp.ui.common.DialogManager
 import org.koin.core.KoinComponent
 import org.koin.core.get

@@ -2,29 +2,28 @@ package com.mibaldi.fitapp.ui.main
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.mibaldi.fitapp.R
-import com.mibaldi.fitapp.services.AnalyticsCallbacks
-import com.mibaldi.fitapp.ui.PlaceActivity
 import com.mibaldi.fitapp.ui.adapter.TrainingsAdapter
 import com.mibaldi.fitapp.ui.base.BaseActivity
 import com.mibaldi.fitapp.ui.common.PermissionRequester
 import com.mibaldi.fitapp.ui.common.startActivity
 import com.mibaldi.fitapp.ui.detail.DetailActivity
-import kotlinx.android.synthetic.main.activity_main.*
 import com.mibaldi.fitapp.ui.main.MainViewModel.UiModel
-import org.koin.android.ext.android.inject
-import org.koin.android.scope.currentScope
-import org.koin.android.viewmodel.ext.android.viewModel
+import com.mibaldi.fitapp.ui.place.PlaceActivity
+import kotlinx.android.synthetic.main.activity_main.*
+import org.koin.androidx.scope.lifecycleScope
+import org.koin.androidx.viewmodel.scope.viewModel
 
 class MainActivity : BaseActivity() {
     private lateinit var adapter: TrainingsAdapter
-    private val viewModel: MainViewModel by currentScope.viewModel(this)
+    private val viewModel: MainViewModel by lifecycleScope.viewModel(this)
     private val coarsePermissionRequester =
         PermissionRequester(this, ACCESS_COARSE_LOCATION)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,15 +34,28 @@ class MainActivity : BaseActivity() {
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.places, menu)
+        return true
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.search_place -> {
+                startActivity<PlaceActivity>{}
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
     override fun onResume() {
         super.onResume()
         viewModel.model.observe(this, Observer(::updateUi))
         viewModel.navigation.observe (this,Observer {event ->
             event.getContentIfNotHandled()?.let {
-                startActivity<PlaceActivity> {}
-                /*startActivity<DetailActivity> {
+                startActivity<DetailActivity> {
                     putExtra(DetailActivity.TRAINING,it.id)
-                }*/
+                }
             }
         })
     }

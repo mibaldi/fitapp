@@ -8,12 +8,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.mibaldi.fitapp.services.NotificationDelegate
 import com.mibaldi.fitapp.services.NotificationDelegateImpl
-import org.koin.android.scope.currentScope
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.scope.lifecycleScope
+import org.koin.androidx.viewmodel.scope.viewModel
 
 abstract class BaseActivity :AppCompatActivity(),NotificationDelegate by NotificationDelegateImpl()
 {
-    private val viewModel: BaseViewModel by currentScope.viewModel(this)
+    private val viewModel: BaseViewModel by lifecycleScope.viewModel(this)
 
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onCreate(savedInstanceState, persistentState)
