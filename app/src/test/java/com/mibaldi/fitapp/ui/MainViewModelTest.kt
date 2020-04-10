@@ -2,6 +2,7 @@ package com.mibaldi.fitapp.ui
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.mibaldi.fitapp.initMockedDi
 import com.mibaldi.fitapp.ui.main.MainViewModel
 import com.mibaldi.testshared.mockedTraining
 import com.mibaldi.usecases.GetTrainings
@@ -13,11 +14,15 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.core.context.KoinContextHandler.get
+import org.koin.dsl.module
+import org.koin.test.AutoCloseKoinTest
+import org.koin.test.get
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class MainViewModelTest {
+class MainViewModelTest: AutoCloseKoinTest() {
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
@@ -32,7 +37,13 @@ class MainViewModelTest {
 
     @Before
     fun setUp() {
-        vm = MainViewModel(getTrainings, Dispatchers.Unconfined)
+        val vmModule = module {
+            factory { MainViewModel(get(), get()) }
+            factory { getTrainings }
+        }
+
+        initMockedDi(vmModule)
+        vm = get()
     }
 
     @Test

@@ -9,6 +9,10 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.initialization.InitializationStatus
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener
 import com.mibaldi.fitapp.R
 import com.mibaldi.fitapp.ui.adapter.TrainingsAdapter
 import com.mibaldi.fitapp.ui.base.BaseActivity
@@ -21,6 +25,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.scope.lifecycleScope
 import org.koin.androidx.viewmodel.scope.viewModel
 
+
 class MainActivity : BaseActivity() {
     private lateinit var adapter: TrainingsAdapter
     private val viewModel: MainViewModel by lifecycleScope.viewModel(this)
@@ -31,7 +36,9 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
         adapter = TrainingsAdapter(viewModel::onTrainingClicked)
         recycler.adapter = adapter
-
+        MobileAds.initialize(this,getString(R.string.admob_value_debug))
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

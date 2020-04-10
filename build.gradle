@@ -13,6 +13,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.google.gms:google-services:4.3.3'
         classpath "org.koin:koin-gradle-plugin:$koin_version"
+
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -39,7 +40,9 @@ allprojects {
                 dexter              : 'com.karumi:dexter:5.0.0',
                 analytics           : 'com.google.firebase:firebase-analytics:17.2.2',
                 messaging           : 'com.google.firebase:firebase-messaging:20.1.0',
-                places              : 'com.google.android.libraries.places:places:2.2.0'
+                places              : 'com.google.android.libraries.places:places:2.2.0',
+                admob               : 'com.google.android.gms:play-services-ads:19.0.1'
+
         ]
         androidKaptLibs = [
                 roomCompiler : 'androidx.room:room-compiler:2.2.1',
