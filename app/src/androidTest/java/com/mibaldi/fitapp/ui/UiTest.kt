@@ -5,6 +5,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
@@ -60,8 +61,8 @@ class UiTest : KoinTest {
             )
         )
 
-       /* onView(withId(R.id.movieDetailToolbar))
-            .check(matches(hasDescendant(withText("Spider-Man: Far from Home"))))*/
+        onView(withId(R.id.trainingDetailToolbar))
+            .check(matches(hasDescendant(withText("T4"))))
 
     }
 }
