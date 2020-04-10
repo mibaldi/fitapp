@@ -15,6 +15,12 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         sendBroadcast(intent)
     }
 
+    override fun onNewToken(token: String) {
+        super.onNewToken(token)
+    }
+
+
+
     companion object {
 
         private val TAG = MyFirebaseMessagingService::class.java.simpleName

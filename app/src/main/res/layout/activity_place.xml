@@ -7,7 +7,7 @@
     tools:context=".ui.place.PlaceActivity"
     >
 
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/autocomplete_fragment"
         android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
         android:layout_width="match_parent"
@@ -20,7 +20,6 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/cardview_dark_background"
         android:layout_below="@id/autocomplete_fragment"
         android:layout_marginTop="16dp"
         android:layout_marginStart="8dp"
