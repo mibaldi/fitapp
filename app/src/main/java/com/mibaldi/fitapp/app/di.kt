@@ -41,25 +41,32 @@ fun Application.initDI(){
         modules(listOf(
             appModule,
             dataModule,
-            scopesModule
+            scopesModule,
+            datasourcesModule,
+            usecasesModule
         ))
     }
 }
 
-private val appModule = module {
+val appModule = module {
     single(named("apiKey")) { androidApplication().getString(R.string.api_key) }
-    single<Analytics> { FirebaseAnalytics() }
     single {  AnalyticsCallbacks(get()) }
     single {  DialogManager() }
+    viewModel { BaseViewModel(get(),get()) }
+}
+val usecasesModule = module {
+    factory { FindTrainingById(get()) }
+}
+val datasourcesModule = module {
+    single<Analytics> { FirebaseAnalytics() }
+
+    single<CoroutineDispatcher> { Dispatchers.Main }
+    single {FitAppDb(get(named("baseUrl")))}
+    single(named("baseUrl")) { "https://api.themoviedb.org/3/" }
     //factory<RemoteDataSource> { FitAppDbDataSource(get()) }
     factory<RemoteDataSource> { FitAppDbDataSourceMock() }
     factory<LocationDataSource>{PlayServicesLocationDataSource(get()) }
     factory<PermissionChecker> {AndroidPermissionChecker(get())}
-    single<CoroutineDispatcher> { Dispatchers.Main }
-    single(named("baseUrl")) { "https://api.themoviedb.org/3/" }
-    single {FitAppDb(get(named("baseUrl")))}
-    factory { FindTrainingById(get()) }
-    viewModel { BaseViewModel(get(),get()) }
 }
 
 val dataModule = module {
