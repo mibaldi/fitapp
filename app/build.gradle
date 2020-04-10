@@ -6,7 +6,7 @@ apply plugin: 'com.google.gms.google-services'
 
 android {
     signingConfigs {
-        debug {
+        release {
             storeFile file('D:\\PROGRAMACION\\CLAVES\\fitappdebug.jks')
             storePassword 'fitappdebug'
             keyAlias = 'fitappdebug'
