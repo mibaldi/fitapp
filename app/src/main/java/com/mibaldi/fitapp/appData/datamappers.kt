@@ -5,8 +5,8 @@ import com.mibaldi.fitapp.appData.server.Training as ServerTraining
 
 fun ServerTraining.toDomainTraining(): Training =
     Training(
-        0,
-        title,
+        id,
+        name,
         date,
         circuit
     )

@@ -6,5 +6,6 @@ import com.mibaldi.domain.Training
 
 interface RemoteDataSource {
     suspend fun getTrainings(): Either<FitAppError,List<Training>>
-    suspend fun findById(id: Int): Either<FitAppError,Training>
+    suspend fun findById(trainingID: String): Either<FitAppError, Training>
+    suspend fun uploadTraining():Either<FitAppError,Boolean>
 }

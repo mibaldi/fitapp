@@ -14,8 +14,12 @@ data class FitAppDbResult(
 
 @Parcelize
 data class Training(
-    val title: String,
+    val id: Int,
+    val name: String,
     val video: Boolean,
     val date: Date,
     val circuit: String
-) : Parcelable
+) : Parcelable {
+    constructor() : this(0, "", false, Date(), "")
+
+}

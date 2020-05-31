@@ -19,13 +19,17 @@ class FirebaseUIActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_firebase_ui)
+
+    }
+
+    override fun onResume() {
+        super.onResume()
         if (Firebase.auth.currentUser != null) {
             startActivity<MainActivity>{}
         } else {
             createSignInIntent()
         }
     }
-
     private fun createSignInIntent() {
         // [START auth_fui_create_intent]
         // Choose authentication providers

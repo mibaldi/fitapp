@@ -8,11 +8,12 @@ import com.mibaldi.fitapp.ui.common.DialogManager
 import com.mibaldi.fitapp.ui.common.Event
 import com.mibaldi.fitapp.ui.common.ScopedViewModel
 import com.mibaldi.usecases.GetTrainings
+import com.mibaldi.usecases.ImportTrainings
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.koin.core.inject
 
-class MainViewModel (private val getTrainings: GetTrainings): ScopedViewModel(){
+class MainViewModel (private val getTrainings: GetTrainings,private val importTrainings: ImportTrainings): ScopedViewModel(){
 
     private val analyticsCallbacks by inject<AnalyticsCallbacks>()
     private val dialogManager by inject<DialogManager>()
@@ -44,12 +45,13 @@ class MainViewModel (private val getTrainings: GetTrainings): ScopedViewModel(){
     }
 
     fun onTrainingClicked(training: Training){
-       /* dialogManager.showDialog({
-            Log.d("POSITIVE",training.name)
-        },{
-            Log.d("NEGATIVE",training.name)
-        })*/
         analyticsCallbacks.logEvent("training clicked")
         _navigation.value = Event(training)
+    }
+
+    fun refreshTrainings() {
+        launch {
+            importTrainings()
+        }
     }
 }

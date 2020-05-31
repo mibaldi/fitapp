@@ -10,6 +10,7 @@ import com.mibaldi.fitapp.R
 import com.mibaldi.fitapp.appData.AndroidPermissionChecker
 import com.mibaldi.fitapp.appData.PlayServicesLocationDataSource
 import com.mibaldi.fitapp.appData.server.FitAppDb
+import com.mibaldi.fitapp.appData.server.FitAppDbDataSource
 import com.mibaldi.fitapp.appData.servermock.FileLocalDb
 import com.mibaldi.fitapp.appData.servermock.FitAppDbDataSourceMock
 import com.mibaldi.fitapp.services.Analytics
@@ -30,6 +31,7 @@ import com.mibaldi.fitapp.ui.training.TrainingViewModel
 import com.mibaldi.usecases.FindTrainingById
 import com.mibaldi.usecases.GetTrainings
 import com.mibaldi.usecases.GetTrainingsHashMap
+import com.mibaldi.usecases.ImportTrainings
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidApplication
@@ -64,6 +66,7 @@ val appModule = module {
 }
 val usecasesModule = module {
     factory { FindTrainingById(get()) }
+    factory { ImportTrainings(get()) }
 }
 val datasourcesModule = module {
     single<Analytics> { FirebaseAnalytics() }
@@ -72,7 +75,7 @@ val datasourcesModule = module {
     single {FitAppDb(get(named("baseUrl")))}
     single(named("baseUrl")) { "https://api.themoviedb.org/3/" }
     //factory<RemoteDataSource> { FitAppDbDataSource(get()) }
-    factory<RemoteDataSource> { FitAppDbDataSourceMock(get()) }
+    factory<RemoteDataSource> { FitAppDbDataSource(get()) }
     factory<LocationDataSource>{PlayServicesLocationDataSource(get()) }
     factory<PermissionChecker> {AndroidPermissionChecker(get())}
 }
@@ -84,7 +87,7 @@ val dataModule = module {
 
 private val scopesModule = module {
     scope(named<MainActivity>()) {
-        viewModel { MainViewModel(get()) }
+        viewModel { MainViewModel(get(),get()) }
         scoped { GetTrainings(get()) }
     }
 

@@ -7,4 +7,8 @@ data class Training(
     val name: String,
     val date: Date,
     val circuit: String
-)
+){
+    init {
+
+    }
+}

@@ -70,7 +70,8 @@ class MainActivity : BaseActivity() {
                 true
             }
             R.id.profile -> {
-                startActivity<ProfileActivity>{}
+                viewModel.refreshTrainings()
+                //startActivity<ProfileActivity>{}
                 true
             }
             else -> super.onOptionsItemSelected(item)

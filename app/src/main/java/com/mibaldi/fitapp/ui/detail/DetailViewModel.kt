@@ -6,7 +6,6 @@ import com.mibaldi.domain.Training
 import com.mibaldi.fitapp.services.AnalyticsCallbacks
 import com.mibaldi.fitapp.ui.common.ScopedViewModel
 import com.mibaldi.usecases.FindTrainingById
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.koin.core.inject
 
@@ -23,11 +22,11 @@ class DetailViewModel(
     private val _model = MutableLiveData<UiModel>()
     val model: LiveData<UiModel>
         get() {
-            if (_model.value == null) findMovie()
+            if (_model.value == null) findTraining()
             return _model
         }
 
-    private fun findMovie() = launch {
+    private fun findTraining() = launch {
         findTrainingById.invoke(trainingId).foldT({
             _model.value = UiModel.Error(it.message ?: "Error general")
         },{
