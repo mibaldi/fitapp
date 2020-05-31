@@ -28,10 +28,7 @@ import com.mibaldi.fitapp.ui.profile.ProfileActivity
 import com.mibaldi.fitapp.ui.profile.ProfileViewModel
 import com.mibaldi.fitapp.ui.training.TrainingActivity
 import com.mibaldi.fitapp.ui.training.TrainingViewModel
-import com.mibaldi.usecases.FindTrainingById
-import com.mibaldi.usecases.GetTrainings
-import com.mibaldi.usecases.GetTrainingsHashMap
-import com.mibaldi.usecases.ImportTrainings
+import com.mibaldi.usecases.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidApplication
@@ -100,7 +97,9 @@ private val scopesModule = module {
         viewModel { PlaceViewModel() }
     }
     scope(named<ProfileActivity>()) {
-        viewModel { ProfileViewModel() }
+        viewModel { ProfileViewModel(get(),get()) }
+        scoped { SendWeight(get()) }
+
     }
     scope(named<TrainingActivity>()) {
         viewModel { TrainingViewModel(get()) }

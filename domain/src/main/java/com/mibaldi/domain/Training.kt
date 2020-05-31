@@ -6,9 +6,6 @@ data class Training(
     val id: Int,
     val name: String,
     val date: Date,
-    val circuit: String
-){
-    init {
-
-    }
-}
+    val circuit: String,
+    var tags: List<Tag> = emptyList()
+)

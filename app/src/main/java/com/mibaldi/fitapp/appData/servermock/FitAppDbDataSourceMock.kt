@@ -79,6 +79,14 @@ class FitAppDbDataSourceMock(private val localDb:FileLocalDb): RemoteDataSource{
         return Either.Right(true)
     }
 
+    override suspend fun getVideo(tag: String): String? {
+        return null
+    }
+
+    override suspend fun sendWeight(weight: Double): Either<FitAppError, Boolean> {
+        return Either.Right(true)
+    }
+
 
 }
 

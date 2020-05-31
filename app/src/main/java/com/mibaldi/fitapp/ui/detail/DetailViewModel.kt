@@ -2,6 +2,7 @@ package com.mibaldi.fitapp.ui.detail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.mibaldi.domain.Tag
 import com.mibaldi.domain.Training
 import com.mibaldi.fitapp.services.AnalyticsCallbacks
 import com.mibaldi.fitapp.ui.common.ScopedViewModel
@@ -33,4 +34,5 @@ class DetailViewModel(
             _model.value = UiModel.Content(it)
         })
     }
+
 }

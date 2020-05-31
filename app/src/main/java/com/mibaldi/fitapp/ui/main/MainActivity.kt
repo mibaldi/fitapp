@@ -70,8 +70,8 @@ class MainActivity : BaseActivity() {
                 true
             }
             R.id.profile -> {
-                viewModel.refreshTrainings()
-                //startActivity<ProfileActivity>{}
+                //viewModel.refreshTrainings()
+                startActivity<ProfileActivity>{}
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -98,7 +98,7 @@ class MainActivity : BaseActivity() {
         progress.visibility = if (model is UiModel.Loading) View.VISIBLE else View.GONE
 
         when(model) {
-            is UiModel.Content -> adapter.trainings = model.trainings.take(10).distinctBy { it.name }
+            is UiModel.Content -> adapter.trainings = model.trainings.distinctBy { it.name }.take(10)
             UiModel.RequestLocationPermission -> coarsePermissionRequester.request {
                 viewModel.onCoarsePermissionRequested()
             }

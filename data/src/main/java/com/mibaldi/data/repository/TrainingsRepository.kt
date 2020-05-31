@@ -44,4 +44,12 @@ class TrainingsRepository (
     suspend fun uploadTrainings() {
         remoteDataSource.uploadTraining()
     }
+
+    suspend fun getVideo(tag: String): String? {
+        return remoteDataSource.getVideo(tag)
+    }
+
+    suspend fun sendWeight(weight: Double) :Either<FitAppError,Boolean> {
+        return remoteDataSource.sendWeight(weight)
+    }
 }

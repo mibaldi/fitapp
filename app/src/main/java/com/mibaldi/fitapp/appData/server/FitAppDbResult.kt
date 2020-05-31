@@ -18,8 +18,17 @@ data class Training(
     val name: String,
     val video: Boolean,
     val date: Date,
-    val circuit: String
+    val circuit: String,
+    val tags: List<String>
 ) : Parcelable {
-    constructor() : this(0, "", false, Date(), "")
+    constructor() : this(0, "", false, Date(), "", emptyList())
+
+}
+
+@Parcelize
+data class Tag(
+    val tag: String,val name: String,val url: String
+) : Parcelable {
+    constructor() : this("","","")
 
 }

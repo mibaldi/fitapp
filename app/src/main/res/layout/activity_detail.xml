@@ -17,8 +17,7 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:contentScrim="?attr/colorPrimary">
 
             <ImageView
                 android:id="@+id/trainingDetailImage"
@@ -29,11 +28,17 @@
                 app:layout_collapseMode="parallax"
                 tools:src="@mipmap/ic_launcher"
                 android:contentDescription="@string/trainingdetailimage" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_gravity="bottom"
+                android:background="@drawable/bg_bottom_transparent"
+                android:layout_height="100dp"/>
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/trainingDetailToolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
                 tools:title="Movie name" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -50,25 +55,56 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:transitionGroup="true">
+            
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
 
+                    android:hint="Date">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:inputType="none"/>
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Name">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:inputType="none"/>
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Circuit">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etCircuit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:inputType="none"/>
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
             <TextView
-                android:id="@+id/trainingDetailSummary"
+                android:text="Tags"
+                android:layout_margin="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:padding="16dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                tools:text="Lorem ipsum" />
-
-            <com.mibaldi.fitapp.ui.detail.TrainingDetailInfoView
-                android:id="@+id/trainingDetailInfo"
+                android:textAppearance="@style/Bold.BioGray.Large"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvTags"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:background="@color/lightBackground"
-                android:lineSpacingMultiplier="1.5"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                tools:text="Lorem ipsum" />
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 
@@ -81,6 +117,7 @@
         android:layout_margin="16dp"
         android:src="@drawable/ic_favorite_off"
         app:layout_anchor="@id/appBarLayout"
+        android:visibility="gone"
         app:layout_anchorGravity="bottom|end"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

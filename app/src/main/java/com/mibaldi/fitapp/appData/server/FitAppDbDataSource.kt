@@ -8,13 +8,18 @@ import com.google.gson.Gson
 import com.mibaldi.data.source.RemoteDataSource
 import com.mibaldi.domain.Either
 import com.mibaldi.domain.FitAppError
+import com.mibaldi.domain.Tag
 import com.mibaldi.fitapp.appData.servermock.FileLocalDb
 import com.mibaldi.fitapp.appData.servermock.fromJson
 import com.mibaldi.fitapp.appData.toDomainTraining
 import com.mibaldi.domain.Training
+import kotlinx.coroutines.Dispatchers
 import com.mibaldi.fitapp.appData.server.Training as ServerTraining
+import com.mibaldi.fitapp.appData.server.Tag as ServerTag
 
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
+import java.util.*
 import kotlin.coroutines.resume
 
 class FitAppDbDataSource(private val localDb: FileLocalDb): RemoteDataSource {
@@ -28,7 +33,7 @@ class FitAppDbDataSource(private val localDb: FileLocalDb): RemoteDataSource {
                 .addOnSuccessListener { result ->
                     val listServerTraining = arrayListOf<ServerTraining>()
                     listServerTraining.addAll(result.toObjects(ServerTraining::class.java))
-                    listTrainings.addAll(listServerTraining.map { it.toDomainTraining() })
+                    listTrainings.addAll(listServerTraining.map { it.toDomainTraining(emptyList()) })
                     continuation.resume(Either.Right(listTrainings))
                 }
                 .addOnFailureListener { exception ->
@@ -47,10 +52,15 @@ class FitAppDbDataSource(private val localDb: FileLocalDb): RemoteDataSource {
                 .get()
                 .addOnSuccessListener { result ->
                     listTrainings.addAll(result.toObjects(ServerTraining::class.java))
-
-                    val training =listTrainings.find { it.id ==trainingID.toInt() }
+                    val training = listTrainings.find { it.id ==trainingID.toInt() }
                     if (training != null){
-                        continuation.resume(Either.Right(training.toDomainTraining()))
+                        db.collection("videos").get().addOnSuccessListener {
+                            val listServerTags = it.toObjects(ServerTag::class.java)
+                            val tags = tagList(training.tags, listServerTags)
+                            continuation.resume(Either.Right(training.toDomainTraining(tags)))
+                        }.addOnFailureListener {
+                            continuation.resume(Either.Right(training.toDomainTraining(emptyList())))
+                        }
                     } else {
                         continuation.resume(Either.Left(FitAppError(404,"")))
                     }
@@ -60,6 +70,59 @@ class FitAppDbDataSource(private val localDb: FileLocalDb): RemoteDataSource {
                 }
         }
 
+    }
+
+    override suspend fun sendWeight(weight: Double) :Either<FitAppError,Boolean>{
+        val TAG = "sendWeight"
+        val instance = Calendar.getInstance()
+        val weightModel = hashMapOf(
+            "weight" to weight,
+            "date" to instance.time
+        )
+
+        val uid = Firebase.auth.uid
+        val db = Firebase.firestore
+        return suspendCancellableCoroutine { continuation ->
+            db.collection("$uid-weights").document()
+                .set(weightModel)
+                .addOnSuccessListener {
+                    Log.d(TAG, "weight successfully written!")
+                    continuation.resume(Either.Right(true))
+                }
+                .addOnFailureListener { e ->
+                    Log.w(TAG, "Error writing weight", e)
+                    continuation.resume(Either.Left(FitAppError(500,"")))
+                }
+        }
+    }
+
+    private fun tagList(
+        listTags: List<String>,
+        listServerTags: List<com.mibaldi.fitapp.appData.server.Tag>
+    ): List<Tag> {
+        val map = listTags.map { tag ->
+            val find = listServerTags.find { it.tag == tag }
+            if (find != null) {
+                Tag(tag, find.name, find.url)
+            } else {
+                Tag(tag, "", "")
+            }
+        }.filter { it.name.isNotEmpty() }
+        return map
+    }
+
+    override suspend fun getVideo(tag: String): String? {
+        return suspendCancellableCoroutine { continuation ->
+            val db = Firebase.firestore
+            db.collection("videos")
+                .whereEqualTo("name",tag)
+                .get()
+                .addOnSuccessListener {
+                    continuation.resume(it.first().data["url"] as String)
+                }.addOnFailureListener{
+                    continuation.resume(null)
+                }
+        }
     }
 
     override suspend fun uploadTraining(): Either<FitAppError, Boolean> {

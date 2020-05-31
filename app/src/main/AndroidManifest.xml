@@ -22,7 +22,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.main.MainActivity"/>
         <activity android:name=".ui.place.PlaceActivity"/>
-        <activity android:name=".ui.profile.ProfileActivity" android:parentActivityName=".ui.main.MainActivity"/>
+        <activity android:name=".ui.profile.ProfileActivity" android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".ui.main.MainActivity"/>
         <activity android:name=".ui.training.TrainingActivity" android:parentActivityName=".ui.main.MainActivity"/>
         <activity android:name=".ui.auth.FirebaseUIActivity"
             android:noHistory="true">

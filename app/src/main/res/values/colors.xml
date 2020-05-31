@@ -21,6 +21,8 @@
     <color name="fitPurpleMenu">#272140</color>
     <color name="transparentScanQR">#99000000</color>
     <color name="dialogTransparent">#00FF0000</color>
+    <color name="blackTransparent">#00000000</color>
+
 
 
 

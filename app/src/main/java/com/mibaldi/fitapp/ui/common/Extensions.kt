@@ -3,13 +3,19 @@ package com.mibaldi.fitapp.ui.common
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.mibaldi.fitapp.R
+import java.security.SecureRandom
 import kotlin.properties.Delegates
+
 
 inline fun <VH : RecyclerView.ViewHolder, T> RecyclerView.Adapter<VH>.basicDiffUtil(
     initialValue: List<T>,
@@ -38,4 +44,19 @@ inline fun <reified T : Activity> Context.intentFor(body: Intent.() -> Unit): In
 
 inline fun <reified T : Activity> Context.startActivity(body: Intent.() -> Unit) {
     startActivity(intentFor<T>(body))
+}
+fun ImageView.loadUrl(url: String) {
+    Glide.with(context).load(url).into(this)
+}
+
+fun ImageView.loadRandomImage(){
+    val res = intArrayOf(R.drawable.pic1, R.drawable.pic2,R.drawable.pic3,R.drawable.pic4,R.drawable.pic5,R.drawable.pic6, R.drawable.pic7,R.drawable.pic8,R.drawable.pic9,R.drawable.pic10)
+    val rand = SecureRandom()
+    val rndInt: Int = rand.nextInt(res.size)
+    val bitmap = BitmapFactory.decodeResource(resources, res[rndInt])
+    Glide.with(context).load(bitmap).into(this)
+}
+
+fun getRandom(range: Float, start: Float): Float {
+    return (Math.random() * range).toFloat() + start
 }

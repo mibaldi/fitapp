@@ -8,4 +8,6 @@ interface RemoteDataSource {
     suspend fun getTrainings(): Either<FitAppError,List<Training>>
     suspend fun findById(trainingID: String): Either<FitAppError, Training>
     suspend fun uploadTraining():Either<FitAppError,Boolean>
+    suspend fun getVideo(tag: String): String?
+    suspend fun sendWeight(weight: Double): Either<FitAppError,Boolean>
 }
