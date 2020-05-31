@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Fitapp</string>
+    <string name="app_name">MibaldiFitApp</string>
     <string name="api_key">My api key</string>
     <string name="trainingdetailimage">trainingDetailImage</string>
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel_fitapp</string>

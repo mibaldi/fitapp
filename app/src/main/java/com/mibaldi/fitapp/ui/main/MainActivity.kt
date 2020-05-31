@@ -17,6 +17,7 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.mibaldi.fitapp.BuildConfig
 import com.mibaldi.fitapp.R
 import com.mibaldi.fitapp.ui.adapter.TrainingsAdapter
 import com.mibaldi.fitapp.ui.base.BaseActivity
@@ -42,7 +43,11 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
         adapter = TrainingsAdapter(viewModel::onTrainingClicked)
         recycler.adapter = adapter
-        MobileAds.initialize(this,getString(R.string.admob_value_debug))
+        if (BuildConfig.DEBUG){
+            MobileAds.initialize(this,getString(R.string.admob_value_debug))
+        }else {
+            MobileAds.initialize(this,getString(R.string.admob_value))
+        }
         val adRequest = AdRequest.Builder().build()
         adView.loadAd(adRequest)
         cvtraining.setOnClickListener {
