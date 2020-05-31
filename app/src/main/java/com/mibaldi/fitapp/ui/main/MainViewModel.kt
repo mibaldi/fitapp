@@ -12,8 +12,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.koin.core.inject
 
-class MainViewModel (private val getTrainings: GetTrainings,
-                     uiDispatcher: CoroutineDispatcher): ScopedViewModel(uiDispatcher){
+class MainViewModel (private val getTrainings: GetTrainings): ScopedViewModel(){
 
     private val analyticsCallbacks by inject<AnalyticsCallbacks>()
     private val dialogManager by inject<DialogManager>()
@@ -35,7 +34,6 @@ class MainViewModel (private val getTrainings: GetTrainings,
     }
 
     private fun refresh() {
-        analyticsCallbacks.logEvent("training clicked")
         _model.value = UiModel.RequestLocationPermission
     }
     fun onCoarsePermissionRequested() {
@@ -51,6 +49,7 @@ class MainViewModel (private val getTrainings: GetTrainings,
         },{
             Log.d("NEGATIVE",training.name)
         })*/
+        analyticsCallbacks.logEvent("training clicked")
         _navigation.value = Event(training)
     }
 }

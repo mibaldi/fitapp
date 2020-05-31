@@ -22,10 +22,16 @@ class DetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
-
+        setSupportActionBar(trainingDetailToolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
         viewModel.model.observe(this, Observer(::updateUi))
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
     private fun updateUi(model: DetailViewModel.UiModel) {
         when (model){
             is DetailViewModel.UiModel.Content -> {

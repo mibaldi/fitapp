@@ -10,6 +10,7 @@ import com.mibaldi.fitapp.R
 import com.mibaldi.fitapp.appData.AndroidPermissionChecker
 import com.mibaldi.fitapp.appData.PlayServicesLocationDataSource
 import com.mibaldi.fitapp.appData.server.FitAppDb
+import com.mibaldi.fitapp.appData.servermock.FileLocalDb
 import com.mibaldi.fitapp.appData.servermock.FitAppDbDataSourceMock
 import com.mibaldi.fitapp.services.Analytics
 import com.mibaldi.fitapp.services.AnalyticsCallbacks
@@ -22,8 +23,13 @@ import com.mibaldi.fitapp.ui.main.MainActivity
 import com.mibaldi.fitapp.ui.main.MainViewModel
 import com.mibaldi.fitapp.ui.place.PlaceActivity
 import com.mibaldi.fitapp.ui.place.PlaceViewModel
+import com.mibaldi.fitapp.ui.profile.ProfileActivity
+import com.mibaldi.fitapp.ui.profile.ProfileViewModel
+import com.mibaldi.fitapp.ui.training.TrainingActivity
+import com.mibaldi.fitapp.ui.training.TrainingViewModel
 import com.mibaldi.usecases.FindTrainingById
 import com.mibaldi.usecases.GetTrainings
+import com.mibaldi.usecases.GetTrainingsHashMap
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidApplication
@@ -53,6 +59,8 @@ val appModule = module {
     single {  AnalyticsCallbacks(get()) }
     single {  DialogManager() }
     viewModel { BaseViewModel(get(),get()) }
+    single { FileLocalDb(get()) }
+
 }
 val usecasesModule = module {
     factory { FindTrainingById(get()) }
@@ -64,7 +72,7 @@ val datasourcesModule = module {
     single {FitAppDb(get(named("baseUrl")))}
     single(named("baseUrl")) { "https://api.themoviedb.org/3/" }
     //factory<RemoteDataSource> { FitAppDbDataSource(get()) }
-    factory<RemoteDataSource> { FitAppDbDataSourceMock() }
+    factory<RemoteDataSource> { FitAppDbDataSourceMock(get()) }
     factory<LocationDataSource>{PlayServicesLocationDataSource(get()) }
     factory<PermissionChecker> {AndroidPermissionChecker(get())}
 }
@@ -76,17 +84,25 @@ val dataModule = module {
 
 private val scopesModule = module {
     scope(named<MainActivity>()) {
-        viewModel { MainViewModel(get(), get()) }
+        viewModel { MainViewModel(get()) }
         scoped { GetTrainings(get()) }
     }
 
     scope(named<DetailActivity>()) {
-        viewModel { (id: Int) -> DetailViewModel(id, get(),get()) }
+        viewModel { (id: Int) -> DetailViewModel(id, get()) }
         scoped { FindTrainingById(get()) }
     }
 
     scope(named<PlaceActivity>()) {
-        viewModel { PlaceViewModel(get()) }
+        viewModel { PlaceViewModel() }
+    }
+    scope(named<ProfileActivity>()) {
+        viewModel { ProfileViewModel() }
+    }
+    scope(named<TrainingActivity>()) {
+        viewModel { TrainingViewModel(get()) }
+        scoped { GetTrainingsHashMap(get()) }
+
     }
 }
 

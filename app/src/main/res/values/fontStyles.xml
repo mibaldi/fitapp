@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="Regular">
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="Bold.BioGray">
+        <item name="android:textColor">@color/fitGray</item>
+    </style>
+    <style name="Bold.BioBlack">
+        <item name="android:textColor">@color/fitBlack</item>
+    </style>
+    <style name="Bold.BioWhite">
+        <item name="android:textColor">@color/fitWhite</item>
+    </style>
+    <style name="Bold.BioPurple">
+        <item name="android:textColor">@color/fitPurpleMenu</item>
+    </style>
+    <style name="Bold.BioBlue">
+        <item name="android:textColor">@color/fitBlue</item>
+    </style>
+
+
+    <style name="Regular.BioGray">
+        <item name="android:textColor">@color/fitGray</item>
+    </style>
+    <style name="Regular.BioBlack">
+        <item name="android:textColor">@color/fitBlack</item>
+    </style>
+    <style name="Regular.BioWhite">
+        <item name="android:textColor">@color/fitWhite</item>
+    </style>
+    <style name="Regular.BioPurple">
+        <item name="android:textColor">@color/fitPurpleMenu</item>
+    </style>
+    <style name="Regular.BioBlue">
+        <item name="android:textColor">@color/fitBlue</item>
+    </style>
+
+    <!-- REGULAR BIOPURPLE -->
+    <style name="Regular.BioPurple.Medium" >
+        <item name="android:textSize">@dimen/medium</item>
+    </style>
+
+    <!-- BOLD BIOPURPLE -->
+    <style name="Bold.BioPurple.VeryVeryLarge" >
+        <item name="android:textSize">@dimen/very_very_large</item>
+    </style>
+    <style name="Bold.BioPurple.Medium">
+        <item name="android:textSize">@dimen/medium</item>
+    </style>
+
+    <!-- BOLD BIOBLACK -->
+    <style name="Bold.BioBlack.VeryVeryLarge" >
+        <item name="android:textSize">@dimen/very_very_large</item>
+    </style>
+
+    <!-- Regular BIOBLACK -->
+    <style name="Regular.BioBlack.Medium" >
+        <item name="android:textSize">@dimen/medium</item>
+    </style>
+
+    <!-- BOLD BIOGRAY -->
+    <style name="Bold.BioGray.VeryLarge" >
+        <item name="android:textSize">@dimen/very_large</item>
+    </style>
+    <style name="Bold.BioGray.Large" >
+        <item name="android:textSize">@dimen/large</item>
+    </style>
+    <style name="Bold.BioGray.Medium" >
+        <item name="android:textSize">@dimen/medium</item>
+    </style>
+    <style name="Bold.BioGray.VeryVeryLarge" >
+        <item name="android:textSize">@dimen/very_very_large</item>
+    </style>
+
+    <!-- REGULAR BIOGRAY -->
+    <style name="Regular.BioGray.Medium" >
+        <item name="android:textSize">@dimen/medium</item>
+    </style>
+    <style name="Regular.BioGray.Small" >
+        <item name="android:textSize">@dimen/small</item>
+    </style>
+    <style name="Regular.BioGray.VerySmall" >
+        <item name="android:textSize">@dimen/very_small</item>
+    </style>
+
+
+    <!-- BOLD BIOBLUE -->
+    <style name="Bold.BioBlue.Small" >
+        <item name="android:textSize">@dimen/small</item>
+    </style>
+
+    <!-- REGULAR BIOBLUE -->
+    <style name="Regular.BioBlue.Medium" >
+        <item name="android:textSize">@dimen/medium</item>
+    </style>
+    <style name="Regular.BioBlue.Small" >
+        <item name="android:textSize">@dimen/small</item>
+    </style>
+    <style name="Regular.BioBlue.VerySmall" >
+        <item name="android:textSize">@dimen/very_small</item>
+    </style>
+
+
+    <!-- BOLD BIOWHITE -->
+    <style name="Bold.BioWhite.VeryGiant" >
+        <item name="android:textSize">@dimen/very_giant</item>
+    </style>
+    <style name="Bold.BioWhite.Giant" >
+        <item name="android:textSize">@dimen/giant</item>
+    </style>
+    <style name="Bold.BioWhite.VeryVeryLarge" >
+        <item name="android:textSize">@dimen/very_very_large</item>
+    </style>
+    <style name="Bold.BioWhite.VeryLarge" >
+        <item name="android:textSize">@dimen/very_large</item>
+    </style>
+    <style name="Bold.BioWhite.Large">
+        <item name="android:textSize">@dimen/large</item>
+    </style>
+    <style name="Bold.BioWhite.Medium" >
+        <item name="android:textSize">@dimen/medium</item>
+    </style>
+    <style name="Bold.BioWhite.Small" >
+        <item name="android:textSize">@dimen/small</item>
+    </style>
+
+    <!-- REGULAR BIOWHITE -->
+
+    <style name="Regular.BioWhite.Giant" >
+        <item name="android:textSize">@dimen/giant</item>
+    </style>
+    <style name="Regular.BioWhite.VeryVeryLarge" >
+        <item name="android:textSize">@dimen/very_very_large</item>
+    </style>
+    <style name="Regular.BioWhite.Large" >
+        <item name="android:textSize">@dimen/large</item>
+    </style>
+    <style name="Regular.BioWhite.Small" >
+        <item name="android:textSize">@dimen/small</item>
+    </style>
+    <style name="Regular.BioWhite.VerySmall" >
+        <item name="android:textSize">@dimen/very_small</item>
+    </style>
+    <style name="Regular.BioWhite.Medium" >
+        <item name="android:textSize">@dimen/medium</item>
+    </style>
+
+
+
+</resources>

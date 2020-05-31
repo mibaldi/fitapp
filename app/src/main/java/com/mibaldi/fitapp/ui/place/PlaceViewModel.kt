@@ -16,7 +16,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.koin.core.inject
 
-class PlaceViewModel (uiDispatcher: CoroutineDispatcher): ScopedViewModel(uiDispatcher),
+class PlaceViewModel: ScopedViewModel(),
     PlaceSelectionListener {
 
     private val _model = MutableLiveData<UiModel>()

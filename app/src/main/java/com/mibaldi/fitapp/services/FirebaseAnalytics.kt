@@ -22,7 +22,7 @@ class FirebaseAnalytics : Analytics {
     }
 
     override fun logEvent(event: String) {
-        Toast.makeText(foregroundActivity,event,Toast.LENGTH_SHORT).show()
+        //Toast.makeText(foregroundActivity,event,Toast.LENGTH_SHORT).show()
     }
 
     override fun logError(error: String) {

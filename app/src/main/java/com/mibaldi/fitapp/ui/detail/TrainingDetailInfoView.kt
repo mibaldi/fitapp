@@ -6,6 +6,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import com.mibaldi.domain.Training
+import com.mibaldi.domain.generateStringDate
 
 class TrainingDetailInfoView @JvmOverloads constructor(
     context: Context,
@@ -16,8 +17,14 @@ class TrainingDetailInfoView @JvmOverloads constructor(
     fun setTraining(training: Training) = with(training) {
         text = buildSpannedString {
 
-            bold { append("Original language: ") }
+            bold { append("Date: ") }
+            appendln(generateStringDate(date))
+
+            bold { append("Name: ") }
             appendln(name)
+
+            bold { append("Circuit: ") }
+            appendln(circuit)
 /*
             bold { append("Original title: ") }
             appendln(originalTitle)

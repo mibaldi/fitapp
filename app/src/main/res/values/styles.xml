@@ -16,4 +16,6 @@
     </style>
 
     <style name="AppTheme.DarkOverlay" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <style name="MySuperAppTheme"></style>
 </resources>

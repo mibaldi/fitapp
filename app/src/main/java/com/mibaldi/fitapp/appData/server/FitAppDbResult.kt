@@ -3,6 +3,7 @@ package com.mibaldi.fitapp.appData.server
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
+import java.util.*
 
 data class FitAppDbResult(
     val page: Int,
@@ -14,5 +15,7 @@ data class FitAppDbResult(
 @Parcelize
 data class Training(
     val title: String,
-    val video: Boolean
+    val video: Boolean,
+    val date: Date,
+    val circuit: String
 ) : Parcelable

@@ -5,12 +5,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.main.MainActivity">
-
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvtraining"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentTop="true"
+        android:layout_margin="20dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Entrenamientos"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textAppearance="@style/Bold.BioBlack.VeryVeryLarge"
+            />
+    </androidx.cardview.widget.CardView>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cvtraining"
         android:layout_above="@id/adView"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:spanCount="3" />

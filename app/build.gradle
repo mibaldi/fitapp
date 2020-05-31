@@ -5,6 +5,14 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.google-services'
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('D:\\PROGRAMACION\\CLAVES\\fitappauth.jks')
+            storePassword 'fitappauth'
+            keyAlias 'fitappauth'
+            keyPassword 'fitappauth'
+        }
+    }
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
     defaultConfig {

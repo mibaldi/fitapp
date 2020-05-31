@@ -10,4 +10,6 @@
                 android:title="@string/my_places" />
         </menu>
     </item>
+    <item android:id="@+id/logout" android:title="Logout"/>
+    <item android:id="@+id/profile" android:title="Profile"/>
 </menu>

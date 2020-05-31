@@ -6,4 +6,27 @@
 
     <color name="lightBackground">#E0E0E0</color>
 
+
+    <!-- COLOR FROM ASSETS PANEL -->
+    <color name="fitWhite">#fff</color>
+    <color name="fitPink">#ff5b74</color>
+    <color name="fitGreen">#1fb925</color>
+    <color name="fitBlue">#00a0ff</color>
+    <color name="fitLightBlue">#cee7fb</color>
+    <color name="fitLightBlueLineEditText">#9BB9D3</color> <!-- Line EditText -->
+    <color name="fitGray">#576e82</color>
+    <color name="fitBlack">#242329</color>
+    <color name="fitBlueGradientTop">#54C0FF</color>
+    <color name="fitBlueGradientBottom">#2A8CFF</color>
+    <color name="fitPurpleMenu">#272140</color>
+    <color name="transparentScanQR">#99000000</color>
+    <color name="dialogTransparent">#00FF0000</color>
+
+
+
+    <color name="grey">#7a7a7a</color>
+    <color name="lightGrey">#aaaaaa</color>
+    <color name="veryLightGrey">#f0f0f0</color>
+    <color name="purple">#7d64e6</color>
+    <color name="yellow">#ffee00</color>
 </resources>

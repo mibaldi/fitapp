@@ -12,9 +12,7 @@ import org.koin.core.inject
 
 class DetailViewModel(
     private val trainingId: Int,
-    private val findTrainingById: FindTrainingById,
-    override val uiDispatcher: CoroutineDispatcher
-) : ScopedViewModel(uiDispatcher) {
+    private val findTrainingById: FindTrainingById) : ScopedViewModel() {
     private val analyticsCallbacks by inject<AnalyticsCallbacks>()
 
     sealed class UiModel {
