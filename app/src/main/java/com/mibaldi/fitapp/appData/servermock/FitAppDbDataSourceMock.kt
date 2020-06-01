@@ -12,6 +12,7 @@ import com.mibaldi.data.source.RemoteDataSource
 import com.mibaldi.domain.Either
 import com.mibaldi.domain.FitAppError
 import com.mibaldi.domain.Training
+import com.mibaldi.domain.Weight
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.io.IOException
 import java.io.InputStream
@@ -85,6 +86,10 @@ class FitAppDbDataSourceMock(private val localDb:FileLocalDb): RemoteDataSource{
 
     override suspend fun sendWeight(weight: Double): Either<FitAppError, Boolean> {
         return Either.Right(true)
+    }
+
+    override suspend fun getWeights(): Either<FitAppError, List<Weight>> {
+        return Either.Right(emptyList())
     }
 
 

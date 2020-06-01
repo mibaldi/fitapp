@@ -3,10 +3,12 @@ package com.mibaldi.fitapp.ui.profile
 import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.view.View
 import android.view.Window
-import android.widget.SeekBar
+import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import com.firebase.ui.auth.AuthUI
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
@@ -14,16 +16,21 @@ import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.IFillFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.mibaldi.domain.Weight
 import com.mibaldi.fitapp.R
 import com.mibaldi.fitapp.ui.auth.FirebaseUIActivity
 import com.mibaldi.fitapp.ui.base.BaseActivity
-import com.mibaldi.fitapp.ui.common.getRandom
 import com.mibaldi.fitapp.ui.common.startActivity
-import kotlinx.android.synthetic.main.activity_detail.*
+import com.mibaldi.fitapp.ui.customUI.MyMarkerView
 import kotlinx.android.synthetic.main.activity_profile.*
 import kotlinx.android.synthetic.main.dialog_setweight.*
 import kotlinx.android.synthetic.main.dialog_video.iconExit
@@ -32,13 +39,12 @@ import org.koin.androidx.viewmodel.scope.viewModel
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.collections.ArrayList
 
 
 private const val REQUEST_RECORD_AUDIO_PERMISSION = 200
 private const val LOG_TAG = "AudioRecordTest"
 
-class ProfileActivity : BaseActivity(), SeekBar.OnSeekBarChangeListener {
+class ProfileActivity : BaseActivity(),OnChartValueSelectedListener {
 
     private val viewModel: ProfileViewModel by lifecycleScope.viewModel(this)
 
@@ -50,6 +56,8 @@ class ProfileActivity : BaseActivity(), SeekBar.OnSeekBarChangeListener {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.title = ""
         supportActionBar?.title = Firebase.auth.currentUser?.displayName
+
+
         btnExport.setOnClickListener {
             viewModel.exportTrainings()
         }
@@ -101,23 +109,84 @@ class ProfileActivity : BaseActivity(), SeekBar.OnSeekBarChangeListener {
         fileName = "${externalCacheDir?.absolutePath}/audiorecordtest.3gp"
 
         ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION)*/
-
-        setChart()
+        viewModel.weights.observe(this,Observer(::updateWeights))
     }
+    fun toDateFormat(){
+
+    }
+
+    private fun updateWeights(list: List<Weight>?) {
+        if (list != null){
+            val map = list.sortedBy { it.date }.map {
+                val milliseconds = TimeUnit.MILLISECONDS.toHours(it.date.time)
+                val entry = Entry(milliseconds.toFloat(), it.weight.toFloat())
+                entry
+            }
+            setChart()
+
+
+            val set1 = LineDataSet(map, "DataSet 1")
+            set1.axisDependency = YAxis.AxisDependency.LEFT
+            set1.color = ColorTemplate.getHoloBlue()
+            set1.valueTextColor = ColorTemplate.getHoloBlue()
+            set1.lineWidth = 1.5f
+            set1.setDrawCircles(false)
+            set1.setDrawValues(false)
+            set1.fillAlpha = 65
+            set1.fillColor = ColorTemplate.getHoloBlue()
+            set1.setCircleColor(Color.BLACK);
+
+            set1.highLightColor = Color.rgb(244, 117, 117)
+            set1.setDrawCircleHole(false)
+            // draw selection line as dashed
+
+            // draw selection line as dashed
+            set1.enableDashedHighlightLine(10f, 5f, 0f)
+
+            // set the filled area
+
+            // set the filled area
+            set1.setDrawFilled(true)
+            set1.setFillFormatter { dataSet, dataProvider -> chart.axisLeft.axisMinimum }
+
+            // set color of filled area
+
+            // set color of filled area
+            // drawables only supported on api level 18 and above
+            val drawable: Drawable? = ContextCompat.getDrawable(this, R.drawable.fade_red)
+            set1.fillDrawable = drawable
+            // create a data object with the data sets
+            val data = LineData(set1)
+            data.setValueTextColor(Color.WHITE)
+            data.setValueTextSize(9f)
+
+            // set data
+            chart.data = data
+
+        }
+    }
+
+
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
     }
     private fun setChart() {
-        seekBar.setOnSeekBarChangeListener(this)
 
         // no description text
 
         // no description text
         chart.description.isEnabled = false
 
-        // enable touch gestures
 
+        // set listeners
+        chart.setOnChartValueSelectedListener(this)
+        chart.setDrawGridBackground(false)
+        val mv = MyMarkerView(this, R.layout.custom_marker_view)
+
+        // Set the marker to the chart
+        mv.chartView = chart
+        chart.marker = mv
         // enable touch gestures
         chart.setTouchEnabled(true)
 
@@ -139,19 +208,17 @@ class ProfileActivity : BaseActivity(), SeekBar.OnSeekBarChangeListener {
 
         // add data
 
-        // add data
-        seekBar.progress = 100
-
         // get the legend (only possible after setting data)
 
         // get the legend (only possible after setting data)
         val l: Legend = chart.legend
-        l.isEnabled = false
+        l.isEnabled = true
 
         val xAxis: XAxis = chart.xAxis
         xAxis.position = XAxis.XAxisPosition.TOP_INSIDE
         xAxis.textSize = 10f
         xAxis.textColor = Color.WHITE
+
         xAxis.setDrawAxisLine(false)
         xAxis.setDrawGridLines(true)
         xAxis.textColor = Color.rgb(255, 192, 56)
@@ -172,8 +239,8 @@ class ProfileActivity : BaseActivity(), SeekBar.OnSeekBarChangeListener {
         leftAxis.textColor = ColorTemplate.getHoloBlue()
         leftAxis.setDrawGridLines(true)
         leftAxis.isGranularityEnabled = true
-        leftAxis.axisMinimum = 0f
-        leftAxis.axisMaximum = 170f
+        leftAxis.axisMinimum = 20f
+        leftAxis.axisMaximum = 130f
         leftAxis.yOffset = -9f
         leftAxis.textColor = Color.rgb(255, 192, 56)
 
@@ -181,59 +248,14 @@ class ProfileActivity : BaseActivity(), SeekBar.OnSeekBarChangeListener {
         rightAxis.isEnabled = false
     }
 
+    override fun onNothingSelected() {
 
-    private fun setData(count: Int, range: Float) {
-
-        // now in hours
-        val now: Long = TimeUnit.MILLISECONDS.toHours(System.currentTimeMillis())
-        val values: ArrayList<Entry> = ArrayList()
-
-        // count = hours
-        val to = now + count.toFloat()
-
-        // increment by 1 hour
-        var x = now.toFloat()
-        while (x < to) {
-            val y: Float = getRandom(range, 50F)
-            values.add(Entry(x, y)) // add one entry per hour
-            x++
-        }
-
-        // create a dataset and give it a type
-        val set1 = LineDataSet(values, "DataSet 1")
-        set1.axisDependency = YAxis.AxisDependency.LEFT
-        set1.color = ColorTemplate.getHoloBlue()
-        set1.valueTextColor = ColorTemplate.getHoloBlue()
-        set1.lineWidth = 1.5f
-        set1.setDrawCircles(false)
-        set1.setDrawValues(false)
-        set1.fillAlpha = 65
-        set1.fillColor = ColorTemplate.getHoloBlue()
-        set1.highLightColor = Color.rgb(244, 117, 117)
-        set1.setDrawCircleHole(false)
-
-        // create a data object with the data sets
-        val data = LineData(set1)
-        data.setValueTextColor(Color.WHITE)
-        data.setValueTextSize(9f)
-
-        // set data
-        chart.data = data
     }
 
-    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-
-        tvX.text = seekBar?.progress.toString()
-
-        setData(seekBar?.progress ?: 0, 50F)
-
-        // redraw
-        chart.invalidate()
+    override fun onValueSelected(e: Entry?, h: Highlight?) {
+        Toast.makeText(this,e?.y.toString(),Toast.LENGTH_SHORT).show()
     }
 
-    override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-
-    override fun onStopTrackingTouch(seekBar: SeekBar?) {}
 /*
 private lateinit var storageRef: StorageReference
     private var saved: Boolean = false

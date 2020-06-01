@@ -97,8 +97,9 @@ private val scopesModule = module {
         viewModel { PlaceViewModel() }
     }
     scope(named<ProfileActivity>()) {
-        viewModel { ProfileViewModel(get(),get()) }
+        viewModel { ProfileViewModel(get(),get(),get()) }
         scoped { SendWeight(get()) }
+        scoped { GetWeights(get()) }
 
     }
     scope(named<TrainingActivity>()) {

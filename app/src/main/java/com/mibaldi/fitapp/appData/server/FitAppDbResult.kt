@@ -30,5 +30,10 @@ data class Tag(
     val tag: String,val name: String,val url: String
 ) : Parcelable {
     constructor() : this("","","")
+}
 
+@Parcelize
+data class Weight(
+    val date: Date,val weight: Double) : Parcelable {
+    constructor() : this(Date(),0.toDouble())
 }

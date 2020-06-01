@@ -1,10 +1,7 @@
 package com.mibaldi.data.repository
 
 import com.mibaldi.data.source.RemoteDataSource
-import com.mibaldi.domain.Either
-import com.mibaldi.domain.FitAppError
-import com.mibaldi.domain.Training
-import com.mibaldi.domain.generateStringDate
+import com.mibaldi.domain.*
 import java.util.HashMap
 
 class TrainingsRepository (
@@ -51,5 +48,9 @@ class TrainingsRepository (
 
     suspend fun sendWeight(weight: Double) :Either<FitAppError,Boolean> {
         return remoteDataSource.sendWeight(weight)
+    }
+
+    suspend fun getWeights(): Either<FitAppError, List<Weight>> {
+        return remoteDataSource.getWeights()
     }
 }

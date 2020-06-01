@@ -6,16 +6,15 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import com.mibaldi.data.source.RemoteDataSource
-import com.mibaldi.domain.Either
-import com.mibaldi.domain.FitAppError
-import com.mibaldi.domain.Tag
+import com.mibaldi.domain.*
 import com.mibaldi.fitapp.appData.servermock.FileLocalDb
 import com.mibaldi.fitapp.appData.servermock.fromJson
 import com.mibaldi.fitapp.appData.toDomainTraining
-import com.mibaldi.domain.Training
+import com.mibaldi.fitapp.appData.toDomainWeight
 import kotlinx.coroutines.Dispatchers
 import com.mibaldi.fitapp.appData.server.Training as ServerTraining
 import com.mibaldi.fitapp.appData.server.Tag as ServerTag
+import com.mibaldi.fitapp.appData.server.Weight as ServerWeight
 
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
@@ -92,6 +91,25 @@ class FitAppDbDataSource(private val localDb: FileLocalDb): RemoteDataSource {
                 .addOnFailureListener { e ->
                     Log.w(TAG, "Error writing weight", e)
                     continuation.resume(Either.Left(FitAppError(500,"")))
+                }
+        }
+    }
+
+    override suspend fun getWeights(): Either<FitAppError, List<Weight>> {
+        val uid = Firebase.auth.uid ?: return Either.Left(FitAppError(401,"Unauthorized"))
+        return suspendCancellableCoroutine {continuation ->
+            val listWeight = arrayListOf<Weight>()
+            val db = Firebase.firestore
+            db.collection("$uid-weights")
+                .get()
+                .addOnSuccessListener { result ->
+                    val listServerWeight = arrayListOf<ServerWeight>()
+                    listServerWeight.addAll(result.toObjects(ServerWeight::class.java))
+                    listWeight.addAll(listServerWeight.map { it.toDomainWeight() })
+                    continuation.resume(Either.Right(listWeight))
+                }
+                .addOnFailureListener { exception ->
+                    continuation.resume(Either.Right(emptyList()))
                 }
         }
     }
