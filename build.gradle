@@ -46,7 +46,9 @@ allprojects {
                 firebaseui          : 'com.firebaseui:firebase-ui-auth:6.2.1',
                 firebaseAuth        : 'com.google.firebase:firebase-auth-ktx:19.3.1',
                 firebaseStorage     : 'com.google.firebase:firebase-storage-ktx:19.1.0',
-                firestore           : 'com.google.firebase:firebase-firestore-ktx:21.2.1'
+                firestore           : 'com.google.firebase:firebase-firestore-ktx:21.2.1',
+                firebaseStorageUI   : 'com.firebaseui:firebase-ui-storage:4.3.2'
+
         ]
         androidKaptLibs = [
                 roomCompiler : 'androidx.room:room-compiler:2.2.1',

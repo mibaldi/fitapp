@@ -1,27 +1,26 @@
 package com.mibaldi.fitapp.ui.detail
 
+import android.R.attr
 import android.annotation.SuppressLint
-import android.app.Dialog
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.net.Uri
 import android.os.Bundle
-import android.view.Window
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.gif.GifDrawable
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.mibaldi.domain.Tag
 import com.mibaldi.domain.generateStringDate
 import com.mibaldi.fitapp.R
 import com.mibaldi.fitapp.ui.adapter.TagsAdapter
+import com.mibaldi.fitapp.ui.common.GlideApp
 import com.mibaldi.fitapp.ui.common.loadRandomImage
-import com.mibaldi.fitapp.ui.common.loadUrl
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import kotlinx.android.synthetic.main.activity_detail.*
-import kotlinx.android.synthetic.main.dialog_video.*
 import org.koin.androidx.scope.lifecycleScope
 import org.koin.androidx.viewmodel.scope.viewModel
 import org.koin.core.parameter.parametersOf
@@ -53,7 +52,36 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun onTagClicked(tag: Tag) {
-        Dialog(this).apply {
+        // WORKING CODE!
+        val storage = Firebase.storage
+        // Create a reference to a file from a Google Cloud Storage URI
+        val gsReference = storage.getReferenceFromUrl(tag.url)
+        GlideApp.with(this@DetailActivity)
+            .asGif()
+            .load(gsReference)
+            .listener(object: RequestListener<GifDrawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<GifDrawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    return false
+                }
+
+                override fun onResourceReady(
+                    resource: GifDrawable?,
+                    model: Any?,
+                    target: Target<GifDrawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    resource?.setLoopCount(2)
+                    return false
+                }
+            })
+            .into(ivGif)
+       /* Dialog(this).apply {
             requestWindowFeature(Window.FEATURE_NO_TITLE)
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             setCancelable(false)
@@ -72,7 +100,7 @@ class DetailActivity : AppCompatActivity() {
                 cancel()
             }
             show()
-        }
+        }*/
     }
 
     override fun onSupportNavigateUp(): Boolean {
