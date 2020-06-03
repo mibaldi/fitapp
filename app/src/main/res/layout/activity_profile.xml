@@ -52,15 +52,10 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:layout_margin="10dp">
-            <Button
-                android:text="Logout"
-                android:id="@+id/btnLogout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+
             <Button
                 android:text="Export"
                 android:id="@+id/btnExport"
-                android:layout_below="@id/btnLogout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
             <Button

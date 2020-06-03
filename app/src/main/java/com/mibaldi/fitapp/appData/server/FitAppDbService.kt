@@ -9,5 +9,5 @@ interface FitAppDbService {
     suspend fun listTrainingsAsync(): Response<FitAppDbResult>
 
     @GET("/trainings")
-    suspend fun findById(@Query("id")id: Int): Response<Training>
+    suspend fun findById(@Query("id")id: Int): Response<ServerTraining>
 }

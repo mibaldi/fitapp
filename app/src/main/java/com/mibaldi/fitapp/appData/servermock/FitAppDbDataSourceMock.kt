@@ -62,7 +62,7 @@ class FitAppDbDataSourceMock(private val localDb:FileLocalDb): RemoteDataSource{
         }
 
     }
-    override suspend fun uploadTraining(): Either<FitAppError,Boolean>{
+    override suspend fun uploadTraining(list:List<Training>): Either<FitAppError,Boolean>{
         val uid = Firebase.auth.uid ?: return Either.Left(FitAppError(401,"Unauthorized"))
         val TAG = "uploadTraining"
         val gson = Gson()

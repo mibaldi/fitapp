@@ -6,5 +6,5 @@ import com.mibaldi.domain.FitAppError
 import com.mibaldi.domain.Training
 
 class FindTrainingById(private val trainingsRepository: TrainingsRepository){
-    suspend operator fun invoke(id: Int): Either<FitAppError,Training> = trainingsRepository.findById(id)
+    suspend operator fun invoke(id: String): Either<FitAppError,Training> = trainingsRepository.findById(id)
 }

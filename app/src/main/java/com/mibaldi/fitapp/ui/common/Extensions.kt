@@ -13,7 +13,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mibaldi.fitapp.R
+import java.lang.Exception
 import java.security.SecureRandom
+import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
 
 
@@ -59,4 +62,27 @@ fun ImageView.loadRandomImage(){
 
 fun getRandom(range: Float, start: Float): Float {
     return (Math.random() * range).toFloat() + start
+}
+
+fun toMilliseconds(list:List<String>):Long{
+    when {
+        list.size > 1 -> {
+            val measure = list[1]
+            val time = list[0]
+           return  when (measure){
+                "m" -> time.toLong() * 60000
+                "h" -> time.toLong() * 3600000
+                else -> time.toLong() * 1000
+            }
+        }
+        list.isNotEmpty() -> {
+            val time = list[0]
+            return try {
+                time.toLong() * 1000
+            } catch (e: Exception){
+                0
+            }
+        }
+        else ->return 0
+    }
 }

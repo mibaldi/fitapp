@@ -62,18 +62,6 @@ class MainActivity : BaseActivity() {
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.search_place -> {
-                startActivity<PlaceActivity>{}
-                true
-            }
-            R.id.logout -> {
-                AuthUI.getInstance()
-                    .signOut(this)
-                    .addOnCompleteListener {
-                        finish()
-                    }
-                true
-            }
             R.id.profile -> {
                 //viewModel.refreshTrainings()
                 startActivity<ProfileActivity>{}

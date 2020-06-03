@@ -4,20 +4,17 @@ import android.util.Log
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.gson.Gson
 import com.mibaldi.data.source.RemoteDataSource
 import com.mibaldi.domain.*
 import com.mibaldi.fitapp.appData.servermock.FileLocalDb
-import com.mibaldi.fitapp.appData.servermock.fromJson
 import com.mibaldi.fitapp.appData.toDomainTraining
 import com.mibaldi.fitapp.appData.toDomainWeight
-import kotlinx.coroutines.Dispatchers
-import com.mibaldi.fitapp.appData.server.Training as ServerTraining
+import com.mibaldi.fitapp.appData.toServerTraining
+import com.mibaldi.fitapp.appData.server.ServerTraining as ServerTraining
 import com.mibaldi.fitapp.appData.server.Tag as ServerTag
 import com.mibaldi.fitapp.appData.server.Weight as ServerWeight
 
 import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.coroutines.resume
 
@@ -51,7 +48,7 @@ class FitAppDbDataSource(private val localDb: FileLocalDb): RemoteDataSource {
                 .get()
                 .addOnSuccessListener { result ->
                     listTrainings.addAll(result.toObjects(ServerTraining::class.java))
-                    val training = listTrainings.find { it.id ==trainingID.toInt() }
+                    val training = listTrainings.find { it.id ==trainingID}
                     if (training != null){
                         db.collection("videos").get().addOnSuccessListener {
                             val listServerTags = it.toObjects(ServerTag::class.java)
@@ -143,10 +140,10 @@ class FitAppDbDataSource(private val localDb: FileLocalDb): RemoteDataSource {
         }
     }
 
-    override suspend fun uploadTraining(): Either<FitAppError, Boolean> {
+    override suspend fun uploadTraining(list: List<Training>): Either<FitAppError, Boolean> {
         val uid = Firebase.auth.uid ?: return Either.Left(FitAppError(401,"Unauthorized"))
         val TAG = "uploadTraining"
-        val gson = Gson()
+       /* val gson = Gson()
         val email = Firebase.auth.currentUser?.email
         val filename = if (email != null && email == "mibaldi2@gmail.com"){
             "trainings"
@@ -155,11 +152,14 @@ class FitAppDbDataSource(private val localDb: FileLocalDb): RemoteDataSource {
         }
         val trainings = localDb.loadJSONFromAsset(filename)?:""
 
-        val list= gson.fromJson<List<ServerTraining>>(trainings)
+        val list= gson.fromJson<List<ServerTraining>>(trainings)*/
 
+        val listServer = list.map { it.toServerTraining()}
         val db = Firebase.firestore
-        for (training in list){
-            db.collection("$uid-trainings").document(training.id.toString())
+        for (training in listServer){
+            val document = db.collection("$uid-trainings").document()
+            training.id = document.id
+            document
                 .set(training)
                 .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
                 .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }

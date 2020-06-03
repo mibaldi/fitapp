@@ -48,10 +48,4 @@ class MainViewModel (private val getTrainings: GetTrainings,private val importTr
         analyticsCallbacks.logEvent("training clicked")
         _navigation.value = Event(training)
     }
-
-    fun refreshTrainings() {
-        launch {
-            importTrainings()
-        }
-    }
 }

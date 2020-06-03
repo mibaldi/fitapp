@@ -8,9 +8,7 @@ import com.mibaldi.usecases.FindTrainingById
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 
-class BaseViewModel (
-    private val findTrainingById: FindTrainingById,
-    uiDispatcher: CoroutineDispatcher
+class BaseViewModel (uiDispatcher: CoroutineDispatcher
 ): ScopedViewModel(uiDispatcher) {
 
     private val _model = MutableLiveData<UiModel>()
@@ -21,16 +19,5 @@ class BaseViewModel (
 
     sealed class UiModel {
         object Loading : UiModel()
-    }
-
-    fun checkIsSuspended(){
-        launch {
-            _model.value = UiModel.Loading
-            findTrainingById(1).foldT({
-
-            },{
-                Log.d("MIKEL","prueba is suspended")
-            })
-        }
     }
 }

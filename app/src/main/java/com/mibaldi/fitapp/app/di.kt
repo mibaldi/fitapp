@@ -28,6 +28,8 @@ import com.mibaldi.fitapp.ui.profile.ProfileActivity
 import com.mibaldi.fitapp.ui.profile.ProfileViewModel
 import com.mibaldi.fitapp.ui.training.TrainingActivity
 import com.mibaldi.fitapp.ui.training.TrainingViewModel
+import com.mibaldi.fitapp.ui.workoutTimer.WorkoutTimerActivity
+import com.mibaldi.fitapp.ui.workoutTimer.WorkoutTimerViewModel
 import com.mibaldi.usecases.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -57,7 +59,7 @@ val appModule = module {
     single(named("apiKey")) { androidApplication().getString(R.string.api_key) }
     single {  AnalyticsCallbacks(get()) }
     single {  DialogManager() }
-    viewModel { BaseViewModel(get(),get()) }
+    viewModel { BaseViewModel(get()) }
     single { FileLocalDb(get()) }
 
 }
@@ -89,7 +91,7 @@ private val scopesModule = module {
     }
 
     scope(named<DetailActivity>()) {
-        viewModel { (id: Int) -> DetailViewModel(id, get()) }
+        viewModel { (id: String) -> DetailViewModel(id, get()) }
         scoped { FindTrainingById(get()) }
     }
 
@@ -105,7 +107,10 @@ private val scopesModule = module {
     scope(named<TrainingActivity>()) {
         viewModel { TrainingViewModel(get()) }
         scoped { GetTrainingsHashMap(get()) }
-
+    }
+    scope(named<WorkoutTimerActivity>()) {
+        viewModel { WorkoutTimerViewModel(get()) }
+        scoped { GetTrainingsHashMap(get()) }
     }
 }
 

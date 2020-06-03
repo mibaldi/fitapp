@@ -60,6 +60,7 @@ class TrainingActivity : BaseActivity() {
             }
             calendarSelectionManager = mySelectionManager
             futureDaysCount = 30
+            pastDaysCount = 3
             includeCurrentDate = true
             init()
         }

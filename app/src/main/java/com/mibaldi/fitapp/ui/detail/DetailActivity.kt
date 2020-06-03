@@ -12,11 +12,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mibaldi.domain.Tag
+import com.mibaldi.domain.Training
 import com.mibaldi.domain.generateStringDate
 import com.mibaldi.fitapp.R
 import com.mibaldi.fitapp.ui.adapter.TagsAdapter
 import com.mibaldi.fitapp.ui.common.loadRandomImage
 import com.mibaldi.fitapp.ui.common.loadUrl
+import com.mibaldi.fitapp.ui.common.startActivity
+import com.mibaldi.fitapp.ui.workoutTimer.WorkoutTimerActivity
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
@@ -25,6 +28,7 @@ import kotlinx.android.synthetic.main.dialog_video.*
 import org.koin.androidx.scope.lifecycleScope
 import org.koin.androidx.viewmodel.scope.viewModel
 import org.koin.core.parameter.parametersOf
+import java.io.Serializable
 
 
 class DetailActivity : AppCompatActivity() {
@@ -32,10 +36,10 @@ class DetailActivity : AppCompatActivity() {
         const val TRAINING = "DetailActivity:training"
     }
     private val viewModel: DetailViewModel by lifecycleScope.viewModel(this) {
-        parametersOf(intent.getIntExtra(TRAINING,-1))
+        parametersOf(intent.getStringExtra(TRAINING))
     }
     private lateinit var tagsAdapter: TagsAdapter
-
+    private lateinit var currentTraining: Training
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +54,11 @@ class DetailActivity : AppCompatActivity() {
         tagsAdapter = TagsAdapter(::onTagClicked)
         rvTags.layoutManager = layoutManager
         rvTags.adapter = tagsAdapter
+        trainingPlay.setOnClickListener {
+            startActivity<WorkoutTimerActivity>{
+                putExtra("workoutList",currentTraining.workoutList as Serializable)
+            }
+        }
     }
 
     private fun onTagClicked(tag: Tag) {
@@ -83,16 +92,13 @@ class DetailActivity : AppCompatActivity() {
         when (model){
             is DetailViewModel.UiModel.Content -> {
                 with(model.training){
+                    currentTraining = this
                     supportActionBar?.title = name
                     trainingDetailImage.loadRandomImage()
                     etName.setText(name)
                     etDate.setText(generateStringDate(date))
                     etCircuit.setText(circuit)
                     tagsAdapter.tags = tags
-
-                    val icon = if (name.contains("0",true))
-                        R.drawable.ic_favorite_on else R.drawable.ic_favorite_off
-                    trainingDetailFavorite.setImageDrawable(getDrawable(icon))
                 }
             }
             is DetailViewModel.UiModel.Error -> {

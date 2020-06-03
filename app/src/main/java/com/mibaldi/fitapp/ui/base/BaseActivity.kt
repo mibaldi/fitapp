@@ -37,7 +37,6 @@ abstract class BaseActivity :AppCompatActivity(),NotificationDelegate by Notific
 
     open fun onNotificationReceived(intent: Intent) {
         Log.d("MIKEL","onNotificationReceived")
-        viewModel.checkIsSuspended()
     }
 
 }

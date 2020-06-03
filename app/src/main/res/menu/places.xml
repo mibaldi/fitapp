@@ -1,15 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/file"
-        android:title="@string/places" >
-        <!-- "file" submenu -->
-        <menu>
-            <item android:id="@+id/search_place"
-                android:title="@string/search_place" />
-            <item android:id="@+id/my_places"
-                android:title="@string/my_places" />
-        </menu>
-    </item>
-    <item android:id="@+id/logout" android:title="Logout"/>
     <item android:id="@+id/profile" android:title="Profile"/>
 </menu>

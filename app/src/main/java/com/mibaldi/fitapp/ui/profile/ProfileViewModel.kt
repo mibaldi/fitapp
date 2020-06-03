@@ -8,12 +8,9 @@ import com.mibaldi.fitapp.services.AnalyticsCallbacks
 import com.mibaldi.fitapp.ui.common.DialogManager
 import com.mibaldi.fitapp.ui.common.Event
 import com.mibaldi.fitapp.ui.common.ScopedViewModel
-import com.mibaldi.usecases.GetTrainings
 import com.mibaldi.usecases.GetWeights
 import com.mibaldi.usecases.ImportTrainings
 import com.mibaldi.usecases.SendWeight
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.core.inject
 
@@ -30,9 +27,9 @@ class ProfileViewModel(private val sendWeightUseCase: SendWeight,private val imp
         }
     }
 
-    fun exportTrainings() {
+    fun exportTrainings(trainings: List<Training>) {
         launch {
-            importTrainings()
+            importTrainings(trainings)
         }
     }
     private val _weights = MutableLiveData<List<Weight>>()

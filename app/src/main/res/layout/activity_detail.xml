@@ -39,7 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                tools:title="Movie name" />
+                tools:title="Training name" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -111,13 +111,13 @@
     </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/trainingDetailFavorite"
+        android:id="@+id/trainingPlay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_favorite_off"
+        android:src="@drawable/ic_play"
         app:layout_anchor="@id/appBarLayout"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_anchorGravity="bottom|end"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

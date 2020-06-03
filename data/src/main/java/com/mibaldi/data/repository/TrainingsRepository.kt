@@ -16,8 +16,8 @@ class TrainingsRepository (
         })
     }
 
-    suspend fun findById(id: Int): Either<FitAppError,Training> {
-        return remoteDataSource.findById(id.toString())
+    suspend fun findById(id: String): Either<FitAppError,Training> {
+        return remoteDataSource.findById(id)
     }
 
     suspend fun getTrainingsDates(): HashMap<String,List<Training>> {
@@ -38,8 +38,8 @@ class TrainingsRepository (
         return hashMap
     }
 
-    suspend fun uploadTrainings() {
-        remoteDataSource.uploadTraining()
+    suspend fun uploadTrainings(list:List<Training>) {
+        remoteDataSource.uploadTraining(list)
     }
 
     suspend fun getVideo(tag: String): String? {

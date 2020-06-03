@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import org.koin.core.inject
 
 class DetailViewModel(
-    private val trainingId: Int,
+    private val trainingId: String,
     private val findTrainingById: FindTrainingById) : ScopedViewModel() {
     private val analyticsCallbacks by inject<AnalyticsCallbacks>()
 
