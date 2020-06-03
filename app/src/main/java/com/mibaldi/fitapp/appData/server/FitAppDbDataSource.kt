@@ -2,6 +2,8 @@ package com.mibaldi.fitapp.appData.server
 
 import android.util.Log
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.QueryDocumentSnapshot
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mibaldi.data.source.RemoteDataSource
@@ -10,13 +12,12 @@ import com.mibaldi.fitapp.appData.servermock.FileLocalDb
 import com.mibaldi.fitapp.appData.toDomainTraining
 import com.mibaldi.fitapp.appData.toDomainWeight
 import com.mibaldi.fitapp.appData.toServerTraining
-import com.mibaldi.fitapp.appData.server.ServerTraining as ServerTraining
-import com.mibaldi.fitapp.appData.server.Tag as ServerTag
-import com.mibaldi.fitapp.appData.server.Weight as ServerWeight
-
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.*
 import kotlin.coroutines.resume
+import com.mibaldi.fitapp.appData.server.Tag as ServerTag
+import com.mibaldi.fitapp.appData.server.Weight as ServerWeight
+
 
 class FitAppDbDataSource(private val localDb: FileLocalDb): RemoteDataSource {
     override suspend fun getTrainings(): Either<FitAppError,List<Training>> {
@@ -156,6 +157,25 @@ class FitAppDbDataSource(private val localDb: FileLocalDb): RemoteDataSource {
 
         val listServer = list.map { it.toServerTraining()}
         val db = Firebase.firestore
+
+        /* val collection = db.collection("$uid-trainings")
+         try {
+             val batchSize = 1000L
+             // retrieve a small batch of documents to avoid out-of-memory errors
+             val future = collection.limit(batchSize).get()
+             var deleted = 0
+             // future.get() blocks on document retrieval
+             future.addOnSuccessListener {
+                 for (document in it.documents) {
+                     document.reference.delete()
+                     ++deleted
+                 }
+             }
+         } catch (e: Exception) {
+             System.err.println("Error deleting collection : " + e.message)
+         }*/
+
+
         for (training in listServer){
             val document = db.collection("$uid-trainings").document()
             training.id = document.id

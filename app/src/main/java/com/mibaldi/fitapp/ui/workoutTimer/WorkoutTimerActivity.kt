@@ -30,7 +30,7 @@ class WorkoutTimerActivity : BaseActivity() {
     var setDone : Int = 0
     lateinit var ejerciciosRestantes: ArrayList<WorkoutStatus>
     var tiempoEjercicioActual = 0L
-    private lateinit var t1: TextToSpeech
+    private  var t1: TextToSpeech? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_workouttimer)
@@ -45,9 +45,10 @@ class WorkoutTimerActivity : BaseActivity() {
                 finish()
             }
         }
+        generateTextToSpeech()
+
         btnStart.setOnClickListener {
             restart()
-            generateTextToSpeech()
             startCountDown(workout.generateList())
         }
         btnStop.setOnClickListener {
@@ -69,15 +70,21 @@ class WorkoutTimerActivity : BaseActivity() {
         t1 = TextToSpeech(applicationContext,
             OnInitListener { status ->
                 if (status != TextToSpeech.ERROR) {
-                    t1.language = Locale.getDefault()
+                    t1?.language = Locale.getDefault()
                 }
             })
-        speak("Empezando ejercicio")
-
     }
 
     private fun speak(message: String) {
-        t1.speak(message,TextToSpeech.QUEUE_FLUSH,null,null)
+        t1?.speak(message,TextToSpeech.QUEUE_FLUSH,null,null)
+    }
+
+    override fun onStop() {
+        t1?.let {
+            it.stop()
+            t1 = null
+        }
+        super.onStop()
     }
 
     private fun restart() {
@@ -113,6 +120,20 @@ class WorkoutTimerActivity : BaseActivity() {
         startCountDownButtons()
         progressCountdown = 0
         val second: Int = 1000
+        when (endTimeObject){
+            is WorkoutStatus.Calentamiento -> {
+                speak("Calentamiento")
+            }
+            is WorkoutStatus.Descanso -> {
+                speak("Descanso")
+            }
+            is WorkoutStatus.Entrenamiento -> {
+                speak("Entrenamiento ${workout.currentRep} de ${workout.repeticiones} ")
+            }
+            is WorkoutStatus.Relajamiento -> {
+                speak("Relax")
+            }
+        }
         countDownTimer =
             object :
                 CountDownTimer(endTime /*finishTime**/, second.toLong() /*interval**/) {
@@ -120,30 +141,12 @@ class WorkoutTimerActivity : BaseActivity() {
                     countDownView.setProgress(progressCountdown, endTime.toInt())
                     workout.tiempoRestante-= second
                     tvTotal.text = workout.tiempoRestante.toWorkoutString(true)
-                    progressCountdown += second
                     tiempoEjercicioActual = endTime - progressCountdown
+                    progressCountdown += second
                     if (tiempoEjercicioActual < 4000){
                         val seconds = (tiempoEjercicioActual / 1000).toInt()
                         if (seconds > 0) {
                             speak("$seconds")
-                        }
-                    }
-                    if (endTime - tiempoEjercicioActual == 1000L){
-                        when (endTimeObject){
-                            is WorkoutStatus.Calentamiento -> {
-                                speak("Empezando Calentamiento")
-                            }
-                            is WorkoutStatus.Descanso -> {
-                                speak("Empezando Descanso")
-
-                            }
-                            is WorkoutStatus.Entrenamiento -> {
-                                speak("Empezando Entrenamiento")
-
-                            }
-                            is WorkoutStatus.Relajamiento -> {
-
-                            }
                         }
                     }
                 }
