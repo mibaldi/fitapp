@@ -2,8 +2,6 @@ package com.mibaldi.fitapp.appData.server
 
 import android.util.Log
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.QueryDocumentSnapshot
-import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mibaldi.data.source.RemoteDataSource
@@ -25,7 +23,7 @@ class FitAppDbDataSource(private val localDb: FileLocalDb): RemoteDataSource {
         return suspendCancellableCoroutine {continuation ->
             val listTrainings = arrayListOf<Training>()
             val db = Firebase.firestore
-            db.collection("$uid-trainings")
+            db.collection("trainings").document("users").collection(uid)
                 .get()
                 .addOnSuccessListener { result ->
                     val listServerTraining = arrayListOf<ServerTraining>()
@@ -45,7 +43,7 @@ class FitAppDbDataSource(private val localDb: FileLocalDb): RemoteDataSource {
         return suspendCancellableCoroutine {continuation ->
             val listTrainings = arrayListOf<ServerTraining>()
             val db = Firebase.firestore
-            db.collection("$uid-trainings")
+            db.collection("trainings").document("users").collection(uid)
                 .get()
                 .addOnSuccessListener { result ->
                     listTrainings.addAll(result.toObjects(ServerTraining::class.java))
@@ -77,10 +75,10 @@ class FitAppDbDataSource(private val localDb: FileLocalDb): RemoteDataSource {
             "date" to instance.time
         )
 
-        val uid = Firebase.auth.uid
+        val uid = Firebase.auth.uid ?: return Either.Left(FitAppError(401,"Unauthorized"))
         val db = Firebase.firestore
         return suspendCancellableCoroutine { continuation ->
-            db.collection("$uid-weights").document()
+            db.collection("weights").document("users").collection(uid).document()
                 .set(weightModel)
                 .addOnSuccessListener {
                     Log.d(TAG, "weight successfully written!")
@@ -98,7 +96,7 @@ class FitAppDbDataSource(private val localDb: FileLocalDb): RemoteDataSource {
         return suspendCancellableCoroutine {continuation ->
             val listWeight = arrayListOf<Weight>()
             val db = Firebase.firestore
-            db.collection("$uid-weights")
+            db.collection("weights").document("users").collection(uid)
                 .get()
                 .addOnSuccessListener { result ->
                     val listServerWeight = arrayListOf<ServerWeight>()
@@ -141,46 +139,27 @@ class FitAppDbDataSource(private val localDb: FileLocalDb): RemoteDataSource {
         }
     }
 
-    override suspend fun uploadTraining(list: List<Training>): Either<FitAppError, Boolean> {
+    override suspend fun uploadTraining(
+        list: List<Training>,
+        toWho: String?
+    ): Either<FitAppError, Boolean> {
         val uid = Firebase.auth.uid ?: return Either.Left(FitAppError(401,"Unauthorized"))
-        val TAG = "uploadTraining"
-       /* val gson = Gson()
-        val email = Firebase.auth.currentUser?.email
-        val filename = if (email != null && email == "mibaldi2@gmail.com"){
-            "trainings"
+        val userId = if(toWho.isNullOrEmpty()) {
+            uid
         } else {
-            "trainings-olga"
+            toWho
         }
-        val trainings = localDb.loadJSONFromAsset(filename)?:""
-
-        val list= gson.fromJson<List<ServerTraining>>(trainings)*/
+        val TAG = "uploadTraining"
 
         val listServer = list.map { it.toServerTraining()}
         val db = Firebase.firestore
 
-        /* val collection = db.collection("$uid-trainings")
-         try {
-             val batchSize = 1000L
-             // retrieve a small batch of documents to avoid out-of-memory errors
-             val future = collection.limit(batchSize).get()
-             var deleted = 0
-             // future.get() blocks on document retrieval
-             future.addOnSuccessListener {
-                 for (document in it.documents) {
-                     document.reference.delete()
-                     ++deleted
-                 }
-             }
-         } catch (e: Exception) {
-             System.err.println("Error deleting collection : " + e.message)
-         }*/
-
 
         for (training in listServer){
-            val document = db.collection("$uid-trainings").document()
+
+            val document = db.collection("trainings").document("users").collection(userId).document()
             training.id = document.id
-            document
-                .set(training)
+            document.set(training)
                 .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
                 .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
         }

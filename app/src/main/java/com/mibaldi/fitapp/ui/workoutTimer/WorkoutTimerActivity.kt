@@ -1,10 +1,13 @@
 package com.mibaldi.fitapp.ui.workoutTimer
 
-import android.os.Bundle
-import android.os.CountDownTimer
+import android.content.Context
+import android.os.*
 import android.speech.tts.TextToSpeech
 import android.speech.tts.TextToSpeech.OnInitListener
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import androidx.lifecycle.Observer
 import com.mibaldi.domain.Workout
 import com.mibaldi.domain.WorkoutStatus
 import com.mibaldi.domain.createWorkoutStatus
@@ -15,7 +18,6 @@ import kotlinx.android.synthetic.main.activity_workouttimer.*
 import org.koin.androidx.scope.lifecycleScope
 import org.koin.androidx.viewmodel.scope.viewModel
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class WorkoutTimerActivity : BaseActivity() {
@@ -30,21 +32,47 @@ class WorkoutTimerActivity : BaseActivity() {
     var setDone : Int = 0
     lateinit var ejerciciosRestantes: ArrayList<WorkoutStatus>
     var tiempoEjercicioActual = 0L
+    lateinit var  workoutList : List<Workout>
     private  var t1: TextToSpeech? = null
+    private lateinit var vibrator: Vibrator
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_workouttimer)
-        intent.extras?.let {
-           val workoutList = (it.getSerializable("workoutList")as List<Workout>)
+        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
+        vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+
+        intent.extras?.let { bundle ->
+            workoutList = (bundle.getSerializable("workoutList")as List<Workout>)
             if (workoutList.isNotEmpty()){
+                adapter.addAll(workoutList.map { it.name })
+                spinner.adapter = adapter
                 workout = workoutList[0]
-                if (workout.name.isEmpty()){
+                viewModel.init(workout)
+                if (workoutList.isEmpty()){
                     finish()
                 }
             } else {
                 finish()
             }
         }
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                val item = adapter.getItem(position)
+                val find = workoutList.find { it.name == item }
+                viewModel.init(find!!)
+            }
+
+        }
+
+        viewModel.workout.observe(this,Observer(::showWorkout))
         generateTextToSpeech()
 
         btnStart.setOnClickListener {
@@ -57,13 +85,21 @@ class WorkoutTimerActivity : BaseActivity() {
         btnPause.setOnClickListener {
             pauseCountDown()
         }
-        tvRep.text = "${workout.currentRep}/${workout.repeticiones}"
-        tvSet.text = "${workout.currentSet}/${workout.series}"
+    }
 
-        countDownView.visibility = View.VISIBLE // show progress view
-        countDownView.setName(workout.name)
-        countDownView.showTraining(workout.total)
-        tvTotal.text = workout.totalToString()
+
+    private fun showWorkout(workout: Workout?) {
+
+        workout?.apply {
+            tvRep.text = "$currentRep/$repeticiones"
+            tvSet.text = "$currentSet/$series"
+
+            countDownView.visibility = View.VISIBLE // show progress view
+            countDownView.setName(name)
+            countDownView.showTraining(total)
+            tvTotal.text = totalToString()
+        }
+
     }
 
     private fun generateTextToSpeech() {
@@ -88,6 +124,7 @@ class WorkoutTimerActivity : BaseActivity() {
     }
 
     private fun restart() {
+
         workout.tiempoRestante = workout.total
         workout.currentSet = 1
         workout.currentRep = 1
@@ -108,7 +145,14 @@ class WorkoutTimerActivity : BaseActivity() {
 
     }
 
-
+    fun vibrate(time : Long){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibrator.vibrate(VibrationEffect.createOneShot(time, VibrationEffect.DEFAULT_AMPLITUDE));
+        } else {
+            //deprecated in API 26
+            vibrator.vibrate(time);
+        }
+    }
 
     private fun startCountDown(list:ArrayList<WorkoutStatus>) {
         ejerciciosRestantes = list
@@ -145,6 +189,7 @@ class WorkoutTimerActivity : BaseActivity() {
                     progressCountdown += second
                     if (tiempoEjercicioActual < 4000){
                         val seconds = (tiempoEjercicioActual / 1000).toInt()
+                        vibrate(500)
                         if (seconds > 0) {
                             speak("$seconds")
                         }

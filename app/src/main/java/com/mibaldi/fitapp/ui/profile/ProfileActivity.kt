@@ -7,6 +7,9 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.Window
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -30,10 +33,12 @@ import com.mibaldi.domain.Tag
 import com.mibaldi.domain.Training
 import com.mibaldi.domain.Weight
 import com.mibaldi.domain.Workout
+import com.mibaldi.fitapp.BuildConfig
 import com.mibaldi.fitapp.R
 import com.mibaldi.fitapp.appData.servermock.fromJson
 import com.mibaldi.fitapp.ui.auth.FirebaseUIActivity
 import com.mibaldi.fitapp.ui.base.BaseActivity
+import com.mibaldi.fitapp.ui.common.generateTrainingList
 import com.mibaldi.fitapp.ui.common.getFile
 import com.mibaldi.fitapp.ui.common.startActivity
 import com.mibaldi.fitapp.ui.common.toMilliseconds
@@ -97,18 +102,19 @@ class ProfileActivity : BaseActivity(),OnChartValueSelectedListener {
                 first_number.maxValue = 120
 
                 first_number.setOnValueChangedListener { picker, oldVal, newVal ->
-                    fNumber = newVal
+                    first_number.value  = newVal
                 }
 
                 second_number.minValue = 0
                 second_number.maxValue = 9
 
                 second_number.setOnValueChangedListener { picker, oldVal, newVal ->
-                    sNumber = newVal
+                    second_number.value = newVal
                 }
 
+
                 btnSendWeight.setOnClickListener {
-                    viewModel.sendWeight(fNumber,sNumber)
+                    viewModel.sendWeight(first_number.value,second_number.value)
                     cancel()
                 }
                 iconExit.setOnClickListener {
@@ -143,90 +149,13 @@ class ProfileActivity : BaseActivity(),OnChartValueSelectedListener {
     private fun proImportCSV(from: File){
         val reader = CSVReader(FileReader(from.absolutePath))
         val readAll = reader.readAll()
-
-        generateTrainings2(readAll)
+        generateTrainings(readAll)
     }
 
-    private fun generateTrainings2(readAll: List<Array<String>>) {
-        Log.d(LOG_TAG,readAll.toString())
-        val trainingMap = mutableMapOf<String,MutableList<Training>>()
-        val withoutHeader = readAll.drop(1)
-        var dayOfWeekString = ""
-        var date = ""
-        val regex = "(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)".toRegex()
-        withoutHeader.forEach {fila ->
-            val cols = fila[0].split(";")
-            when (val first = cols[0]){
-                "Lunes","Martes","Miercoles","Jueves","Viernes","Sabado","Domingo"->{
-                    date = cols[1]
-                    trainingMap[date] = mutableListOf()
-                    dayOfWeekString = first
-                }
-                else -> {
-                    val list = trainingMap[dayOfWeekString]?.toMutableList() ?: mutableListOf()
-                    val nextDayOfWeek = getDate(date,dayOfWeekString)
-                    val name = first
-                    val circuit = cols[1]
-                    val tiempoEntrenamientoList = cols[2].split(regex)
-                    val relaxList = cols[3].split(regex)
-                    val descansoList = cols[4].split(regex)
-                    val repeticiones = cols[5].split("-")
-                    val series = cols[6]
-
-                    val tiempoEntrenamiento = toMilliseconds(tiempoEntrenamientoList)
-                    val relax = toMilliseconds(relaxList)
-                    val descanso = toMilliseconds(descansoList)
-
-
-                    val workoutList = repeticiones.map {
-                        Workout(name=first,entrenamiento = tiempoEntrenamiento,
-                            relajamiento = relax,
-                            descanso = descanso,
-                            repeticiones = if (it.isNotEmpty()){ it.toInt()} else {0},
-                            series = if (series.isNotEmpty()){ series.toInt()} else {0}
-                        )
-                    }
-                    val tags = cols[7].split(",")
-                    val tagList = tags.map { Tag(it, "", "") }.filter { it.tag.isNotEmpty() }
-                    list.add( Training("",name,nextDayOfWeek,circuit, tagList, workoutList))
-                    trainingMap[dayOfWeekString] = list
-                }
-            }
-        }
+    private fun generateTrainings(readAll: List<Array<String>>) {
+        val trainingMap = generateTrainingList(readAll)
         viewModel.exportTrainings(trainingMap.values.flatten())
     }
-
-
-    private fun getDayOfWeek(dayOfWeek:String) :Int{
-        return when(dayOfWeek){
-            "Lunes"->2
-            "Martes"->3
-            "Miercoles"->4
-            "Jueves"->5
-            "Viernes"->6
-            "Sabado"->7
-            "Domingo"-> 2
-            else -> 0
-        }
-    }
-
-    private fun getDate(dateString: String,dayOfWeek: String): Date{
-        return if (dateString.isNotEmpty()){
-            SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()).parse(dateString)
-                ?: nextDayOfWeek(getDayOfWeek(dayOfWeek))
-        } else {
-            nextDayOfWeek(getDayOfWeek(dayOfWeek))
-        }
-    }
-
-    private fun nextDayOfWeek(dayOfWeek: Int):Date{
-        val date1 = Calendar.getInstance()
-        while (date1[Calendar.DAY_OF_WEEK] != dayOfWeek) {
-            date1.add(Calendar.DATE, 1)
-        }
-        return date1.time
-    }
-
 
     private fun updateWeights(list: List<Weight>?) {
         if (list != null){

@@ -6,8 +6,12 @@ import com.mibaldi.domain.*
 import java.util.HashMap
 
 class AuthRepository (private val remoteDataSource: AuthRemoteDataSource) {
-    suspend fun getUsers(): Either<FitAppError, List<String>> {
+    suspend fun getUsers(): Either<FitAppError, List<User>> {
         return remoteDataSource.getUsers()
+    }
+
+    suspend fun registerUser() : Either<FitAppError, String>{
+        return remoteDataSource.registerUser()
     }
 
 

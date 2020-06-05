@@ -4,28 +4,36 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.mibaldi.fitapp.R
+import com.mibaldi.fitapp.ui.base.BaseActivity
 import com.mibaldi.fitapp.ui.common.startActivity
 import com.mibaldi.fitapp.ui.main.MainActivity
+import org.koin.androidx.scope.lifecycleScope
+import org.koin.androidx.viewmodel.scope.viewModel
 
-class FirebaseUIActivity : AppCompatActivity() {
+class FirebaseUIActivity : BaseActivity() {
+    private val viewModel: FirebaseViewModel by lifecycleScope.viewModel(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_firebase_ui)
-
     }
 
     override fun onResume() {
         super.onResume()
+        viewModel.navigation.observe (this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                goToMainActivity()
+            }
+        })
         if (Firebase.auth.currentUser != null) {
-            startActivity<MainActivity>{}
+            viewModel.registerUser()
         } else {
             createSignInIntent()
         }
@@ -58,7 +66,7 @@ class FirebaseUIActivity : AppCompatActivity() {
 
                 val user = FirebaseAuth.getInstance().currentUser
                 Log.d("OK",user.toString())
-                startActivity<MainActivity>{}
+                viewModel.registerUser()
 
                 // ...
             } else {
@@ -70,6 +78,11 @@ class FirebaseUIActivity : AppCompatActivity() {
                 // ...
             }
         }
+    }
+
+    private fun goToMainActivity() {
+
+        startActivity<MainActivity> {}
     }
     // [END auth_fui_result]
 

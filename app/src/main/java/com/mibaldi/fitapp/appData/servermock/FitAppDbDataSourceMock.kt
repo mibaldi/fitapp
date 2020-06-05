@@ -6,7 +6,6 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.mibaldi.data.source.RemoteDataSource
 import com.mibaldi.domain.Either
@@ -18,8 +17,6 @@ import java.io.IOException
 import java.io.InputStream
 import java.nio.charset.Charset
 import kotlin.coroutines.resume
-
-import java.text.SimpleDateFormat
 
 class FitAppDbDataSourceMock(private val localDb:FileLocalDb): RemoteDataSource{
 
@@ -62,7 +59,10 @@ class FitAppDbDataSourceMock(private val localDb:FileLocalDb): RemoteDataSource{
         }
 
     }
-    override suspend fun uploadTraining(list:List<Training>): Either<FitAppError,Boolean>{
+    override suspend fun uploadTraining(
+        list: List<Training>,
+        toWho: String?
+    ): Either<FitAppError,Boolean>{
         val uid = Firebase.auth.uid ?: return Either.Left(FitAppError(401,"Unauthorized"))
         val TAG = "uploadTraining"
         val gson = Gson()

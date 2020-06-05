@@ -20,6 +20,7 @@ import com.google.firebase.ktx.Firebase
 import com.mibaldi.fitapp.BuildConfig
 import com.mibaldi.fitapp.R
 import com.mibaldi.fitapp.ui.adapter.TrainingsAdapter
+import com.mibaldi.fitapp.ui.admin.AdminActivity
 import com.mibaldi.fitapp.ui.base.BaseActivity
 import com.mibaldi.fitapp.ui.common.PermissionRequester
 import com.mibaldi.fitapp.ui.common.startActivity
@@ -63,8 +64,11 @@ class MainActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.profile -> {
-                //viewModel.refreshTrainings()
-                startActivity<ProfileActivity>{}
+                if (BuildConfig.FLAVOR.equals("trainer")) {
+                    startActivity<AdminActivity> {}
+                } else {
+                    startActivity<ProfileActivity> {}
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)

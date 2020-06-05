@@ -20,43 +20,45 @@ import java.util.*
 import kotlin.coroutines.resume
 
 class AuthDbDataSource: AuthRemoteDataSource {
-
-    override suspend fun getUsers(): Either<FitAppError, List<String>> {
-       /* val uid = Firebase.auth.uid ?: return Either.Left(FitAppError(401,"Unauthorized"))
+    val TAG ="AUTH"
+    override suspend fun getUsers(): Either<FitAppError, List<User>> {
+       val uid = Firebase.auth.uid ?: return Either.Left(FitAppError(401,"Unauthorized"))
         return suspendCancellableCoroutine {continuation ->
-            val listTrainings = arrayListOf<Training>()
-            val db = Firebase.
-            db.collection("$uid-trainings")
+            val db = Firebase.firestore
+            db.collection("admin").document("users").collection("info")
                 .get()
                 .addOnSuccessListener { result ->
-                    val listServerTraining = arrayListOf<ServerTraining>()
-                    listServerTraining.addAll(result.toObjects(ServerTraining::class.java))
-                    listTrainings.addAll(listServerTraining.map { it.toDomainTraining(emptyList()) })
-                    continuation.resume(Either.Right(listTrainings))
+                    val userList = result.toObjects(ServerUser::class.java).map { User(it.id,it.email) }
+                    continuation.resume(Either.Right(userList))
                 }
                 .addOnFailureListener { exception ->
                     continuation.resume(Either.Right(emptyList()))
                 }
-        }*/
-        return Either.Right(arrayListOf())
+        }
     }
 
     override suspend fun registerUser(): Either<FitAppError, String> {
-      /*  val uid = Firebase.auth
+        val firebaseUser = Firebase.auth.currentUser
+
+        val uid = Firebase.auth.uid ?: return Either.Left(FitAppError(401,"Unauthorized"))
+
+        val user = hashMapOf(
+            "id" to uid,
+            "email" to firebaseUser?.email
+        )
         val db = Firebase.firestore
         return suspendCancellableCoroutine { continuation ->
-            db.collection("$uid").document()
-                .set(weightModel)
+            db.collection("admin").document("users").collection("info").document(uid)
+                .set(user)
                 .addOnSuccessListener {
-                    Log.d(TAG, "weight successfully written!")
-                    continuation.resume(Either.Right(true))
+                    Log.d(TAG, "user successfully written!")
+                    continuation.resume(Either.Right("${firebaseUser?.uid}"))
                 }
                 .addOnFailureListener { e ->
-                    Log.w(TAG, "Error writing weight", e)
+                    Log.w(TAG, "Error writing user", e)
                     continuation.resume(Either.Left(FitAppError(500,"")))
                 }
-        }*/
-        return Either.Right("")
+        }
     }
 
 }

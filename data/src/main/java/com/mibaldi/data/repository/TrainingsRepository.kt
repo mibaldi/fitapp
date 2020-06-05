@@ -38,8 +38,11 @@ class TrainingsRepository (
         return hashMap
     }
 
-    suspend fun uploadTrainings(list:List<Training>) {
-        remoteDataSource.uploadTraining(list)
+    suspend fun uploadTrainings(
+        list: List<Training>,
+        toWho: String?
+    ) {
+        remoteDataSource.uploadTraining(list,toWho)
     }
 
     suspend fun getVideo(tag: String): String? {

@@ -59,12 +59,17 @@
             android:textAppearance="@style/Bold.BioBlack.VeryVeryLarge"
             tools:text="1/1"/>
     </LinearLayout>
-
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/spinner"
+        android:layout_below="@+id/tvRestante"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"/>
     <com.mibaldi.fitapp.ui.customUI.CircleCountDownView
         android:id="@+id/countDownView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/tvRestante"
+        android:layout_below="@+id/spinner"
         android:layout_above="@+id/buttons"
         android:layout_centerInParent="true"
         android:layout_marginBottom="5dp"

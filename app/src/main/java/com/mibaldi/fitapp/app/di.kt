@@ -1,21 +1,26 @@
 package com.mibaldi.fitapp.app
 
 import android.app.Application
+import com.mibaldi.data.repository.AuthRepository
 import com.mibaldi.data.repository.PermissionChecker
 import com.mibaldi.data.repository.RegionRepository
 import com.mibaldi.data.repository.TrainingsRepository
+import com.mibaldi.data.source.AuthRemoteDataSource
 import com.mibaldi.data.source.LocationDataSource
 import com.mibaldi.data.source.RemoteDataSource
 import com.mibaldi.fitapp.R
 import com.mibaldi.fitapp.appData.AndroidPermissionChecker
 import com.mibaldi.fitapp.appData.PlayServicesLocationDataSource
+import com.mibaldi.fitapp.appData.server.AuthDbDataSource
 import com.mibaldi.fitapp.appData.server.FitAppDb
 import com.mibaldi.fitapp.appData.server.FitAppDbDataSource
 import com.mibaldi.fitapp.appData.servermock.FileLocalDb
-import com.mibaldi.fitapp.appData.servermock.FitAppDbDataSourceMock
 import com.mibaldi.fitapp.services.Analytics
 import com.mibaldi.fitapp.services.AnalyticsCallbacks
 import com.mibaldi.fitapp.services.FirebaseAnalytics
+import com.mibaldi.fitapp.ui.admin.AdminActivity
+import com.mibaldi.fitapp.ui.auth.FirebaseUIActivity
+import com.mibaldi.fitapp.ui.auth.FirebaseViewModel
 import com.mibaldi.fitapp.ui.base.BaseViewModel
 import com.mibaldi.fitapp.ui.common.DialogManager
 import com.mibaldi.fitapp.ui.detail.DetailActivity
@@ -77,11 +82,13 @@ val datasourcesModule = module {
     factory<RemoteDataSource> { FitAppDbDataSource(get()) }
     factory<LocationDataSource>{PlayServicesLocationDataSource(get()) }
     factory<PermissionChecker> {AndroidPermissionChecker(get())}
+    factory<AuthRemoteDataSource> {AuthDbDataSource()}
 }
 
 val dataModule = module {
     factory { RegionRepository(get(),get()) }
     factory { TrainingsRepository(get(),get()) }
+    factory { AuthRepository(get())}
 }
 
 private val scopesModule = module {
@@ -109,8 +116,15 @@ private val scopesModule = module {
         scoped { GetTrainingsHashMap(get()) }
     }
     scope(named<WorkoutTimerActivity>()) {
-        viewModel { WorkoutTimerViewModel(get()) }
-        scoped { GetTrainingsHashMap(get()) }
+        viewModel { WorkoutTimerViewModel() }
+    }
+    scope(named<FirebaseUIActivity>()) {
+        viewModel { FirebaseViewModel(get()) }
+        scoped { RegisterUser(get()) }
+    }
+    scope(named<AdminActivity>()) {
+        viewModel { com.mibaldi.fitapp.ui.admin.AdminViewModel(get(),get()) }
+        scoped { GetUsers(get()) }
     }
 }
 

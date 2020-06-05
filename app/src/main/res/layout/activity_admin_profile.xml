@@ -38,6 +38,8 @@
                 android:id="@+id/adminProfileToolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                android:theme="@style/AppTheme.ActionBar"
                 app:layout_collapseMode="pin"
                 tools:title="Movie name" />
 
@@ -48,6 +50,7 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvusers"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
