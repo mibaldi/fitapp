@@ -26,14 +26,14 @@ class TagConverter {
     val gson = Gson()
 
     @TypeConverter
-    fun stringToTag(tagString: String?) : TagEntity?{
+    fun stringToTag(tagString: String?) : List<TagEntity>?{
         return tagString?.let {
-            gson.fromJson<TagEntity>(tagString)
-        }
+            gson.fromJson<List<TagEntity>>(tagString)
+        } ?: emptyList()
     }
 
     @TypeConverter
-    fun tagToString(tag: TagEntity) : String?{
+    fun tagToString(tag: List<TagEntity>) : String?{
         return gson.toJson(tag)
     }
 }
