@@ -45,12 +45,12 @@ sealed class Either<out L, out R> {
      * @see Left
      * @see Right
      */
-    fun fold(fnL: (L) -> Any, fnR: (R) -> Any): Any =
+    suspend fun fold(fnL: suspend (L) -> Any,  fnR: suspend (R) -> Any): Any =
         when (this) {
             is Left -> fnL(a)
             is Right -> fnR(b)
         }
-    fun <T>foldT(fnL: (L)-> T,fnR:(R)-> T): T =
+    suspend fun <T>foldT(fnL: suspend (L)-> T,fnR: suspend(R)-> T): T =
         when (this) {
             is Left -> fnL(a)
             is Right -> fnR(b)

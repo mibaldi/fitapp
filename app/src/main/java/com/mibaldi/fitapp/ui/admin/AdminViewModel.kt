@@ -9,19 +9,23 @@ import com.mibaldi.fitapp.services.AnalyticsCallbacks
 import com.mibaldi.fitapp.ui.common.DialogManager
 import com.mibaldi.fitapp.ui.common.Event
 import com.mibaldi.fitapp.ui.common.ScopedViewModel
-import com.mibaldi.usecases.GetUsers
-import com.mibaldi.usecases.GetWeights
-import com.mibaldi.usecases.ImportTrainings
-import com.mibaldi.usecases.SendWeight
+import com.mibaldi.usecases.*
 import kotlinx.coroutines.launch
 import org.koin.core.inject
 
 
-class AdminViewModel(private val importTrainings: ImportTrainings, private val getUsersUseCase: GetUsers) : ScopedViewModel(){
+class AdminViewModel(private val importTrainings: ImportTrainings, private val getUsersUseCase: GetUsers, private val removeUserTrainings: RemoveUserTrainings) : ScopedViewModel(){
 
     fun exportTrainings(trainings: List<Training>) {
         launch {
-            importTrainings(trainings,_userClicked.value)
+            _userClicked.value?.let {
+                importTrainings(trainings,it)
+            }
+        }
+    }
+    fun importTrainingsFunction(trainings: List<Training>,userId: String){
+        launch {
+            importTrainings(trainings,userId)
         }
     }
 

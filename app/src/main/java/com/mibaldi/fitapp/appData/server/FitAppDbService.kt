@@ -1,13 +1,15 @@
 package com.mibaldi.fitapp.appData.server
 
+import com.mibaldi.domain.FitAppError
+import kotlinx.android.parcel.Parcelize
 import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface FitAppDbService {
-    @GET("")
-    suspend fun listTrainingsAsync(): Response<FitAppDbResult>
 
-    @GET("/trainings")
-    suspend fun findById(@Query("id")id: Int): Response<ServerTraining>
+    @DELETE("/api/admin/trainings/{userID}")
+    suspend fun deleteUser(@Header("x-auth")auth: String,@Path("userID") userID: String): Response<ResultAuth>
+
+    @GET("/api/admin/users")
+    suspend fun getUser(@Header("x-auth")auth: String): Response<List<ServerUser>>
 }

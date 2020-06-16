@@ -20,14 +20,6 @@
             android:textAppearance="@style/Bold.BioBlack.VeryVeryLarge"
             />
     </androidx.cardview.widget.CardView>
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/cvtraining"
-        android:layout_above="@id/adView"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:spanCount="3" />
     <com.google.android.gms.ads.AdView
         xmlns:ads="http://schemas.android.com/apk/res-auto"
         android:id="@+id/adView"
@@ -38,16 +30,5 @@
         ads:adSize="BANNER"
         ads:adUnitId="@string/admob_value_debug">
     </com.google.android.gms.ads.AdView>
-    <ProgressBar
-        android:id="@+id/progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_centerInParent="true"
-        />
-
 
 </RelativeLayout>

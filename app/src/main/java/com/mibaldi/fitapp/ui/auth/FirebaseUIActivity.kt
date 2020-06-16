@@ -23,6 +23,11 @@ class FirebaseUIActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_firebase_ui)
+        if (Firebase.auth.currentUser != null) {
+            viewModel.registerUser()
+        } else {
+            createSignInIntent()
+        }
     }
 
     override fun onResume() {
@@ -32,11 +37,6 @@ class FirebaseUIActivity : BaseActivity() {
                 goToMainActivity()
             }
         })
-        if (Firebase.auth.currentUser != null) {
-            viewModel.registerUser()
-        } else {
-            createSignInIntent()
-        }
     }
     private fun createSignInIntent() {
         // [START auth_fui_create_intent]

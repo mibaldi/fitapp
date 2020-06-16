@@ -15,3 +15,9 @@ class RegisterUser(private val authRepository: AuthRepository) {
         return authRepository.registerUser()
     }
 }
+
+class RemoveUserTrainings(private val authRepository: AuthRepository) {
+    suspend operator fun invoke(userId: String): Either<FitAppError, String>{
+        return authRepository.removeUserTrainings(userId)
+    }
+}

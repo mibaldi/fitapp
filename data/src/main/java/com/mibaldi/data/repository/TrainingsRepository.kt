@@ -1,31 +1,55 @@
 package com.mibaldi.data.repository
 
+import com.mibaldi.data.source.LocalTrainingDataSource
 import com.mibaldi.data.source.RemoteDataSource
 import com.mibaldi.domain.*
 import java.util.HashMap
 
 class TrainingsRepository (
+    private val localTrainingDataSource: LocalTrainingDataSource,
     private val remoteDataSource: RemoteDataSource,
     private val regionRepository: RegionRepository
 ) {
     suspend fun getTrainings(): List<Training> {
-       return remoteDataSource.getTrainings().foldT({
+
+        if (localTrainingDataSource.isEmpty()){
+            val trainings = remoteDataSource.getTrainings()
+            trainings.foldT({},{
+                localTrainingDataSource.saveTrainings(it)
+            })
+        }
+        return localTrainingDataSource.getTrainings()
+
+     /*  return remoteDataSource.getTrainings().foldT({
             emptyList()
         },{
             it
-        })
+        })*/
     }
 
     suspend fun findById(id: String): Either<FitAppError,Training> {
-        return remoteDataSource.findById(id)
+      return localTrainingDataSource.findById(id)?.let {
+            Either.Right(it)
+       } ?: run {
+          remoteDataSource.findById(id).foldT({
+              return@foldT Either.Left(FitAppError(404,"Error"))
+          },{
+              localTrainingDataSource.update(it)
+              return@foldT Either.Right(it)
+          })
+       }
     }
 
     suspend fun getTrainingsDates(): HashMap<String,List<Training>> {
-        return remoteDataSource.getTrainings().foldT({
-            generateHashmap(emptyList())
-        },{
-            generateHashmap(it)
-        })
+        if (localTrainingDataSource.isEmpty()){
+            val trainings = remoteDataSource.getTrainings()
+            trainings.foldT({
+            },{
+                localTrainingDataSource.saveTrainings(it)
+            })
+        }
+       return generateHashmap(localTrainingDataSource.getTrainings())
+
     }
     private fun generateHashmap(list:List<Training>): HashMap<String,List<Training>>{
         val hashMap = hashMapOf<String,List<Training>>()

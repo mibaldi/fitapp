@@ -4,7 +4,6 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.mibaldi.fitapp.defaultFakeTrainings
 import com.mibaldi.fitapp.initMockedDi
-import com.mibaldi.fitapp.ui.main.MainViewModel
 import com.mibaldi.usecases.GetTrainings
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Before

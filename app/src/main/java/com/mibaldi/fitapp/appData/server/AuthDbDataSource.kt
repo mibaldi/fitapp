@@ -5,23 +5,14 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mibaldi.data.source.AuthRemoteDataSource
-import com.mibaldi.data.source.RemoteDataSource
 import com.mibaldi.domain.*
-import com.mibaldi.fitapp.appData.servermock.FileLocalDb
-import com.mibaldi.fitapp.appData.toDomainTraining
-import com.mibaldi.fitapp.appData.toDomainWeight
-import com.mibaldi.fitapp.appData.toServerTraining
-import com.mibaldi.fitapp.appData.server.ServerTraining as ServerTraining
-import com.mibaldi.fitapp.appData.server.Tag as ServerTag
-import com.mibaldi.fitapp.appData.server.Weight as ServerWeight
 
 import kotlinx.coroutines.suspendCancellableCoroutine
-import java.util.*
 import kotlin.coroutines.resume
 
-class AuthDbDataSource: AuthRemoteDataSource {
+class AuthDbDataSource(private val authAppDb: AuthAppDb): AuthRemoteDataSource {
     val TAG ="AUTH"
-    override suspend fun getUsers(): Either<FitAppError, List<User>> {
+    override suspend fun getUsers2(): Either<FitAppError, List<User>> {
        val uid = Firebase.auth.uid ?: return Either.Left(FitAppError(401,"Unauthorized"))
         return suspendCancellableCoroutine {continuation ->
             val db = Firebase.firestore
@@ -34,6 +25,35 @@ class AuthDbDataSource: AuthRemoteDataSource {
                 .addOnFailureListener { exception ->
                     continuation.resume(Either.Right(emptyList()))
                 }
+        }
+    }
+
+    override suspend fun getUsers():  Either<FitAppError, List<User>> {
+        val uid = Firebase.auth.uid ?: return Either.Left(FitAppError(401,"Unauthorized"))
+
+
+        val getUsersCall = authAppDb.service.getUser(uid)
+        return if (!getUsersCall.isSuccessful) {
+            Either.Left(FitAppError(getUsersCall.code(),getUsersCall.message()))
+        } else {
+            return getUsersCall.body()?.let {
+                Either.Right(it.map { User(it.id,it.email) })
+            } ?: Either.Left(FitAppError(500,"not body"))
+
+        }
+    }
+
+    override suspend fun removeUserTrainings(userID:String): Either<FitAppError, String> {
+        val uid = Firebase.auth.uid ?: return Either.Left(FitAppError(401,"Unauthorized"))
+
+        val deleteUserCall = authAppDb.service.deleteUser(uid,userID)
+        return if (!deleteUserCall.isSuccessful) {
+            Either.Left(FitAppError(deleteUserCall.code(),deleteUserCall.message()))
+        } else {
+            Either.Right("without body")
+            /*return deleteUserCall.body()?.let {
+                Either.Right(it)
+            } ?: Either.Right("without body")*/
         }
     }
 

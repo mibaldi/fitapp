@@ -14,5 +14,9 @@ class AuthRepository (private val remoteDataSource: AuthRemoteDataSource) {
         return remoteDataSource.registerUser()
     }
 
+    suspend fun removeUserTrainings(userId: String): Either<FitAppError, String> {
+        return remoteDataSource.removeUserTrainings(userId)
+    }
+
 
 }

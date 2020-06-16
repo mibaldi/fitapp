@@ -12,9 +12,8 @@ import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import com.jakewharton.espresso.OkHttp3IdlingResource
 import com.mibaldi.fitapp.R
-import com.mibaldi.fitapp.appData.server.FitAppDb
+import com.mibaldi.fitapp.appData.server.AuthAppDb
 import com.mibaldi.fitapp.ui.main.MainActivity
-import com.mibaldi.fitapp.utils.fromJson
 import okhttp3.mockwebserver.MockResponse
 import org.junit.Before
 import org.junit.Rule
@@ -46,7 +45,7 @@ class UiTest : KoinTest {
             )
         )
 
-        val resource = OkHttp3IdlingResource.create("OkHttp", get<FitAppDb>().okHttpClient)
+        val resource = OkHttp3IdlingResource.create("OkHttp", get<AuthAppDb>().okHttpClient)
         IdlingRegistry.getInstance().register(resource)
     }
 

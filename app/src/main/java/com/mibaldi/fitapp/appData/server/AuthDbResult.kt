@@ -9,3 +9,9 @@ data class ServerUser(
     val id: String, val email: String) : Parcelable {
     constructor() : this("","")
 }
+
+@Parcelize
+data class ResultAuth(
+    val result: String, val error: String) : Parcelable {
+    constructor() : this("","")
+}
